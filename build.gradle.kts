@@ -20,7 +20,7 @@ repositories {
 }
 
 dependencies {
-//	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springdoc:springdoc-openapi-webmvc-core:1.8.0")
 	implementation("io.github.resilience4j:resilience4j-core:2.2.0")
 

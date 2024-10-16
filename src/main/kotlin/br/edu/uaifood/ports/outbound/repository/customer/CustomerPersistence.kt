@@ -1,9 +1,7 @@
 package br.edu.uaifood.ports.outbound.repository.customer
 
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
+import br.edu.uaifood.domain.entities.CustomerStatus
+import jakarta.persistence.*
 
 @Entity(name = "customer")
 data class CustomerPersistence(
@@ -13,5 +11,6 @@ data class CustomerPersistence(
     var name: String,
     var cpf: String,
     var email: String,
-    var status: String
+    @Enumerated(EnumType.STRING)
+    var status: CustomerStatus
 )

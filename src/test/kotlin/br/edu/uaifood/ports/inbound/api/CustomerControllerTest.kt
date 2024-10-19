@@ -1,9 +1,8 @@
 package br.edu.uaifood.ports.inbound.api
 
+import br.edu.uaifood.adapters.CustomerService
 import br.edu.uaifood.domain.entities.Customer
-import br.edu.uaifood.domain.services.CustomerService
-import br.edu.uaifood.ports.dto.customer.CustomerRequest
-import com.fasterxml.jackson.databind.ObjectMapper
+import br.edu.uaifood.ports.outbound.repository.customer.CustomerPersistence
 import io.mockk.every
 import io.mockk.impl.annotations.RelaxedMockK
 import org.junit.jupiter.api.Test
@@ -16,40 +15,78 @@ import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 
-
 @AutoConfigureMockMvc
 @SpringBootTest
 class CustomerControllerTest @Autowired constructor(
     val mockMvc: MockMvc,
-    val mapper: ObjectMapper
 ) {
 
     @RelaxedMockK
     lateinit var customerService: CustomerService
 
-
     @Test
     fun whenPostRequestCustomer_thenReturnsStatus200() {
         val customerRequest = CustomerRequest(
-            name = "name",
+            name = "Name Surname",
             cpf = "910.933.630-37",
             email = "name.surname@gmail.com"
         )
 
-        val newCustomer = Customer(customerRequest)
+        val newCustomer = Customer.from(customerRequest)
+        val customerPersistence = CustomerPersistence.from(newCustomer)
 
-        every { customerService.createCustomer(newCustomer) } returns newCustomer;
+        every { customerService.createCustomer(newCustomer) } returns CustomerResponse.from(customerPersistence)
 
         mockMvc.perform(
-            post("/customers/create").content(mapper.writeValueAsString(customerRequest))
+            post("/v1/customers/create").content(
+                "{\n" +
+                        "   \"name\":\"Name Surname\",\n" +
+                        "   \"cpf\":\"910.933.630-37\",\n" +
+                        "   \"e-mail\":\"name.surname@gmail.com\"\n" +
+                        "}"
+            )
                 .contentType(MediaType.APPLICATION_JSON)
         )
-            .andExpect(status().isOk)
+            .andExpect(status().isCreated)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.id").value(1))
-            .andExpect(jsonPath("$.name").value("name"))
-            .andExpect(jsonPath("$.cpf").value("910.933.630-37"))
+            .andExpect(jsonPath("$.name").value("Name Surname"))
+            .andExpect(jsonPath("$.cpf").value("91093363037"))
             .andExpect(jsonPath("$.e-mail").value("name.surname@gmail.com"))
             .andExpect(jsonPath("$.status").value("ACTIVE"))
+    }
+
+    @Test
+    fun whenPostRequestCustomerWithInvalidCPf_thenReturnsStatus400() {
+
+        mockMvc.perform(
+            post("/v1/customers/create").content(
+                "{\n" +
+                        "   \"name\":\"Name Surname\",\n" +
+                        "   \"cpf\":\"111.222.333-44\",\n" +
+                        "   \"e-mail\":\"name.surname@gmail.com\"\n" +
+                        "}"
+            )
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(status().isBadRequest)
+            .andExpect(content().string("Invalid CPF"))
+    }
+
+    @Test
+    fun whenPostRequestCustomerWithInvalidEmail_thenReturnsStatus400() {
+
+        mockMvc.perform(
+            post("/v1/customers/create").content(
+                "{\n" +
+                        "   \"name\":\"Name Surname\",\n" +
+                        "   \"cpf\":\"910.933.630-37\",\n" +
+                        "   \"e-mail\":\"name.surnameinvalid.com\"\n" +
+                        "}"
+            )
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(status().isBadRequest)
+            .andExpect(content().string("Invalid e-mail"))
     }
 }

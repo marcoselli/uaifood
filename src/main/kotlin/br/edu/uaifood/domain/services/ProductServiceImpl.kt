@@ -19,6 +19,7 @@ class ProductServiceImpl(
         logger.info("Inserting product ${product.name} into menu")
         return productRepository.findByName(product.name)
             .let { it.map { productPersisted -> Product.from(productPersisted) } }
+            .onEach { alreadySavedProduct -> alreadySavedProduct.ensureUniqueness(product)}
             .let { productRepository.save(ProductPersisted.from(product)) }
             .let { ProductResponse.from(it) }
             .also { logger.info("Product ${product.name} inserted into menu successfully") }

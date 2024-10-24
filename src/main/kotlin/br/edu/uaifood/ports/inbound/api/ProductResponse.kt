@@ -1,22 +1,24 @@
 package br.edu.uaifood.ports.inbound.api
 
 import br.edu.uaifood.ports.outbound.repository.ProductPersisted
-import java.util.*
 
 data class ProductResponse(
-    val id: UUID = UUID.randomUUID(),
+    val id: String,
     val name: String,
     val description: String,
     val price: Double,
-    val category: String
+    val category: String,
+    val imageUrl: String
 ) {
     companion object {
         fun from(productPersisted: ProductPersisted): ProductResponse =
             ProductResponse(
+                id = productPersisted.id.toString(),
                 name = productPersisted.name,
                 description = productPersisted.description,
                 price = productPersisted.price,
-                category = productPersisted.category
+                category = productPersisted.category,
+                imageUrl = productPersisted.imageUrl
             )
     }
 }

@@ -1,0 +1,7 @@
+{
+   "name": "Coke",
+   "description": "Coca-cola 350ml",
+   "price": 10.00,
+   "category": "DRINK",
+   "image_url": "base-img-url.com"
+}

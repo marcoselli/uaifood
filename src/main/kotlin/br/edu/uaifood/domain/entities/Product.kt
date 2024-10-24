@@ -7,7 +7,8 @@ data class Product(
     val name: String,
     val description: String,
     val price: Double,
-    val category: ProductCategory
+    val category: ProductCategory,
+    val imageUrl: String
 ) {
     companion object {
         fun from(productRequest: ProductRequest) =
@@ -15,7 +16,8 @@ data class Product(
                 name = productRequest.name,
                 description = productRequest.description,
                 price = validatePrice(productRequest.price),
-                category = validateCategory(productRequest.category)
+                category = validateCategory(productRequest.category),
+                imageUrl = productRequest.imageUrl
             )
 
         fun from(productPersisted: ProductPersisted) =
@@ -23,7 +25,9 @@ data class Product(
                 name = productPersisted.name,
                 description = productPersisted.description,
                 price = validatePrice(productPersisted.price),
-                category = validateCategory(productPersisted.category)
+                category = validateCategory(productPersisted.category),
+                imageUrl = productPersisted.imageUrl
+
             )
 
         private fun validatePrice(price: Double) =
@@ -39,9 +43,7 @@ data class Product(
             }
     }
 
-    fun ensureUniqueness(products: List<Product>) = products.forEach { this.ensureUniqueness(it) }
-
-    private fun ensureUniqueness(product: Product) {
+    fun ensureUniqueness(product: Product) {
         if ((this.name == product.name) and (this.category == product.category))
             throw Exception("Product ${this.name} already exists")
         if ((this.name == product.name) and (this.category != product.category))

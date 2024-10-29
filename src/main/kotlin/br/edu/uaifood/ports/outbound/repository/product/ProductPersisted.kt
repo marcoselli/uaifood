@@ -1,4 +1,4 @@
-package br.edu.uaifood.ports.outbound.repository
+package br.edu.uaifood.ports.outbound.repository.product
 
 import br.edu.uaifood.domain.entities.Product
 import jakarta.persistence.Entity

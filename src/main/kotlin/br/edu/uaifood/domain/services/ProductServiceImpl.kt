@@ -2,8 +2,8 @@ package br.edu.uaifood.domain.services
 
 import br.edu.uaifood.adapters.ProductService
 import br.edu.uaifood.domain.entities.Product
-import br.edu.uaifood.ports.inbound.api.ProductResponse
-import br.edu.uaifood.ports.outbound.repository.ProductPersisted
+import br.edu.uaifood.ports.inbound.api.product.dto.ProductResponse
+import br.edu.uaifood.ports.outbound.repository.product.ProductPersisted
 import br.edu.uaifood.adapters.ProductRepository
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service

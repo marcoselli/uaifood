@@ -1,6 +1,6 @@
-package br.edu.uaifood.ports.inbound.api
+package br.edu.uaifood.ports.inbound.api.product.dto
 
-data class ProductRequest(
+data class UpsertProductRequest(
     val name: String,
     val description: String,
     val price: Double,

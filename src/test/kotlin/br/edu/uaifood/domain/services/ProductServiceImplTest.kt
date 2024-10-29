@@ -2,8 +2,8 @@ package br.edu.uaifood.domain.services
 
 import br.edu.uaifood.adapters.ProductRepository
 import br.edu.uaifood.domain.entities.Product
-import br.edu.uaifood.ports.inbound.api.ProductResponse
-import br.edu.uaifood.ports.outbound.repository.ProductPersisted
+import br.edu.uaifood.ports.inbound.api.product.dto.ProductResponse
+import br.edu.uaifood.ports.outbound.repository.product.ProductPersisted
 import io.github.glytching.junit.extension.random.Random
 import io.github.glytching.junit.extension.random.RandomBeansExtension
 import io.mockk.every
@@ -11,7 +11,6 @@ import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import java.util.UUID
 
 
 @ExtendWith(RandomBeansExtension::class)

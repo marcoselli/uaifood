@@ -1,7 +1,7 @@
-package br.edu.uaifood.ports.inbound.api
+package br.edu.uaifood.ports.inbound.api.customer.dto
 
 import br.edu.uaifood.domain.entities.CustomerStatus
-import br.edu.uaifood.ports.outbound.repository.customer.CustomerPersistence
+import br.edu.uaifood.ports.outbound.repository.customer.CustomerPersisted
 import com.fasterxml.jackson.annotation.JsonProperty
 
 data class CustomerResponse(
@@ -18,7 +18,7 @@ data class CustomerResponse(
 ) {
     companion object {
 
-        fun from(customer: CustomerPersistence): CustomerResponse {
+        fun from(customer: CustomerPersisted): CustomerResponse {
             return CustomerResponse(
                 name = customer.name,
                 cpf = customer.cpf,

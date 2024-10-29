@@ -2,7 +2,7 @@ package br.edu.uaifood.adapters
 
 import br.edu.uaifood.domain.entities.Customer
 import br.edu.uaifood.domain.entities.CustomerStatus.ACTIVE
-import br.edu.uaifood.ports.outbound.repository.customer.CustomerPersistence
+import br.edu.uaifood.ports.outbound.repository.customer.CustomerPersisted
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
@@ -22,7 +22,7 @@ class CustomerRepositoryTest {
     fun whenCreateACustomer_thenReturnCreatedCustomer() {
         val newCustomer = Customer("Name Surname", "910.933.630-37", "name.surname@gmail.com", ACTIVE)
 
-        val persisted = entityManager.persist(CustomerPersistence.from(newCustomer))
+        val persisted = entityManager.persist(CustomerPersisted.from(newCustomer))
         entityManager.flush()
 
         assertThat(persisted.id).isEqualTo(1)

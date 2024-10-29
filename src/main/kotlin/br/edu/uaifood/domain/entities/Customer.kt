@@ -1,6 +1,6 @@
 package br.edu.uaifood.domain.entities
 
-import br.edu.uaifood.ports.inbound.api.CustomerRequest
+import br.edu.uaifood.ports.inbound.api.customer.dto.CustomerRequest
 
 class Customer(
     var name: String,

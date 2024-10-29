@@ -1,7 +1,8 @@
 package br.edu.uaifood.domain.entities
 
-import br.edu.uaifood.ports.inbound.api.ProductRequest
-import br.edu.uaifood.ports.outbound.repository.ProductPersisted
+import br.edu.uaifood.exception.ProductValidationException
+import br.edu.uaifood.ports.inbound.api.product.dto.UpsertProductRequest
+import br.edu.uaifood.ports.outbound.repository.product.ProductPersisted
 
 data class Product(
     val name: String,
@@ -11,13 +12,13 @@ data class Product(
     val imageUrl: String
 ) {
     companion object {
-        fun from(productRequest: ProductRequest) =
+        fun from(upsertProductRequest: UpsertProductRequest) =
             Product(
-                name = productRequest.name,
-                description = productRequest.description,
-                price = validatePrice(productRequest.price),
-                category = validateCategory(productRequest.category),
-                imageUrl = productRequest.imageUrl
+                name = upsertProductRequest.name,
+                description = upsertProductRequest.description,
+                price = validatePrice(upsertProductRequest.price),
+                category = validateCategory(upsertProductRequest.category),
+                imageUrl = upsertProductRequest.imageUrl
             )
 
         fun from(productPersisted: ProductPersisted) =
@@ -31,7 +32,7 @@ data class Product(
             )
 
         private fun validatePrice(price: Double) =
-            if (price > 0) price else throw Exception("Product price should be greater than zero")
+            if (price > 0) price else throw ProductValidationException("Product price should be greater than zero")
 
         private fun validateCategory(productCategory: String) =
             when (productCategory) {
@@ -39,7 +40,7 @@ data class Product(
                 "SIDE_DISH" -> ProductCategory.SIDE_DISH
                 "DRINK" -> ProductCategory.DRINK
                 "DESSERT" -> ProductCategory.DESSERT
-                else -> throw Exception("Unknown product category")
+                else -> throw ProductValidationException("Unknown product category")
             }
     }
 

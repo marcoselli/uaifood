@@ -1,6 +1,6 @@
 package br.edu.uaifood.adapters
 
-import br.edu.uaifood.ports.outbound.repository.ProductPersisted
+import br.edu.uaifood.ports.outbound.repository.product.ProductPersisted
 import org.springframework.data.jpa.repository.JpaRepository
 import java.util.UUID
 

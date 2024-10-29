@@ -1,6 +1,6 @@
-package br.edu.uaifood.ports.inbound.api
+package br.edu.uaifood.ports.inbound.api.product.dto
 
-import br.edu.uaifood.ports.outbound.repository.ProductPersisted
+import br.edu.uaifood.ports.outbound.repository.product.ProductPersisted
 
 data class ProductResponse(
     val id: String,

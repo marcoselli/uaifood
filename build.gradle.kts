@@ -21,9 +21,10 @@ repositories {
 }
 
 dependencies {
+	implementation("mysql:mysql-connector-java:8.0.33")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springdoc:springdoc-openapi-webmvc-core:1.8.0")
-	implementation("io.github.resilience4j:resilience4j-core:2.2.0")
+	//implementation("io.github.resilience4j:resilience4j-core:2.2.0")
 
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.15.0")
 

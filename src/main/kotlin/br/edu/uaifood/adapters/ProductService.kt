@@ -1,7 +1,7 @@
 package br.edu.uaifood.adapters
 
 import br.edu.uaifood.domain.entities.Product
-import br.edu.uaifood.ports.inbound.api.ProductResponse
+import br.edu.uaifood.ports.inbound.api.product.dto.ProductResponse
 
 interface ProductService {
 

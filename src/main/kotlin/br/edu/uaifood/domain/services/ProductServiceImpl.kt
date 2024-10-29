@@ -17,11 +17,14 @@ class ProductServiceImpl(
 
     override fun insertIntoMenu(product: Product): ProductResponse {
         logger.info("Inserting product ${product.name} into menu")
-        return productRepository.findByName(product.name)
+        return runCatching {
+            productRepository.findByName(product.name)
             .let { it.map { productPersisted -> Product.from(productPersisted) } }
             .onEach { alreadySavedProduct -> alreadySavedProduct.ensureUniqueness(product)}
             .let { productRepository.save(ProductPersisted.from(product)) }
             .let { ProductResponse.from(it) }
-            .also { logger.info("Product ${product.name} inserted into menu successfully") }
+        }.onSuccess { logger.info("Product ${product.name} inserted into menu successfully")
+        }.onFailure { logger.info("Fail to insert Product ${product.name}: ${it.message}")
+        }.getOrThrow()
     }
 }

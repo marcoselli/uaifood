@@ -46,9 +46,9 @@ data class Product(
 
     fun ensureUniqueness(product: Product) {
         if ((this.name == product.name) and (this.category == product.category))
-            throw Exception("Product ${this.name} already exists")
+            throw ProductValidationException("Product ${this.name} already exists")
         if ((this.name == product.name) and (this.category != product.category))
-            throw Exception("Product ${this.name} already exists in another category")
+            throw ProductValidationException("Product ${this.name} already exists in another category")
     }
 
 

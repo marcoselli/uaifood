@@ -7,6 +7,7 @@ import br.edu.uaifood.ports.outbound.repository.customer.CustomerPersistence
 import io.mockk.every
 import io.mockk.mockk
 import org.assertj.core.api.AssertionsForClassTypes.assertThat
+import java.util.*
 import kotlin.test.Test
 
 class CustomerServiceImplTest {
@@ -29,4 +30,25 @@ class CustomerServiceImplTest {
         assertThat(result.email).isEqualTo("name.surname@gmail.com")
         assertThat(result.status).isEqualTo(ACTIVE)
     }
+
+    @Test
+    fun whenGetCustomerByCpf_thenReturnCustomer() {
+        //given
+        val newCustomer = Customer("Name Surname", "910.933.630-37", "name.surname@gmail.com", ACTIVE)
+        val newCustomerPersistence = Optional.of(CustomerPersistence.from(newCustomer))
+
+        every { customerRepository.findByCpf("910.933.630-37") } returns newCustomerPersistence;
+
+        //when
+        val result = customerService.createCustomer(newCustomer);
+
+        //then
+        assertThat(result.name).isEqualTo("Name Surname")
+        assertThat(result.cpf).isEqualTo("910.933.630-37")
+        assertThat(result.email).isEqualTo("name.surname@gmail.com")
+        assertThat(result.status).isEqualTo(ACTIVE)
+    }
+
+
+
 }

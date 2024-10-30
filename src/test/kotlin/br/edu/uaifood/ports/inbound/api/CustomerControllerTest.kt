@@ -2,6 +2,7 @@ package br.edu.uaifood.ports.inbound.api
 
 import br.edu.uaifood.adapters.CustomerService
 import br.edu.uaifood.domain.entities.Customer
+import br.edu.uaifood.domain.entities.CustomerStatus
 import br.edu.uaifood.ports.outbound.repository.customer.CustomerPersistence
 import io.mockk.every
 import io.mockk.impl.annotations.RelaxedMockK
@@ -13,6 +14,7 @@ import org.springframework.test.web.servlet.MockMvc
 
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 
 @AutoConfigureMockMvc
@@ -25,7 +27,7 @@ class CustomerControllerTest @Autowired constructor(
     lateinit var customerService: CustomerService
 
     @Test
-    fun whenPostRequestCustomer_thenReturnsStatus200() {
+    fun whenPostRequestCustomer_thenReturnsStatus201() {
         val customerRequest = CustomerRequest(
             name = "Name Surname",
             cpf = "910.933.630-37",
@@ -89,4 +91,31 @@ class CustomerControllerTest @Autowired constructor(
             .andExpect(status().isBadRequest)
             .andExpect(content().string("Invalid e-mail"))
     }
+
+    @Test
+    fun whenGetCustomerByCPF_thenReturnsStatus200() {
+        val customer = Customer(
+            name = "Name Surname",
+            cpf = "910.933.630-37",
+            email = "name.surname@gmail.com",
+            status = CustomerStatus.ACTIVE
+        )
+
+        val customerPersistence = CustomerPersistence.from(customer)
+
+        every { customerService.getByCpf(customer.cpf) } returns CustomerResponse.from(customerPersistence)
+
+        mockMvc.perform(
+            get("/v1/customers?cpf=910.933.630-37")
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.id").value(1))
+            .andExpect(jsonPath("$.name").value("Name Surname"))
+            .andExpect(jsonPath("$.cpf").value("91093363037"))
+            .andExpect(jsonPath("$.e-mail").value("name.surname@gmail.com"))
+            .andExpect(jsonPath("$.status").value("ACTIVE"))
+    }
+
 }

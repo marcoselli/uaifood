@@ -18,4 +18,14 @@ class CustomerServiceImpl(var repository: CustomerRepository) : CustomerService 
         val persisted = repository.save(CustomerPersistence.from(newCustomer))
         return CustomerResponse.from(persisted)
     }
+
+    override fun getByCpf(cpf: String): CustomerResponse {
+        logger.info("Getting customer by cpf")
+        val customer = repository.findByCpf(cpf)
+        if (customer.isPresent) {
+            return CustomerResponse.from(customer.get())
+        } else {
+            throw Exception("Cusffff Not Found")
+        }
+    }
 }

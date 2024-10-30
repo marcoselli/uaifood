@@ -4,6 +4,7 @@ plugins {
 	id("org.springframework.boot") version "3.3.4"
 	id("io.spring.dependency-management") version "1.1.6"
 	kotlin("plugin.jpa") version "1.9.25"
+	id("jacoco")
 }
 
 group = "br.edu"
@@ -20,9 +21,12 @@ repositories {
 }
 
 dependencies {
+	implementation("mysql:mysql-connector-java:8.0.33")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springdoc:springdoc-openapi-webmvc-core:1.8.0")
-	implementation("io.github.resilience4j:resilience4j-core:2.2.0")
+	//implementation("io.github.resilience4j:resilience4j-core:2.2.0")
+
+	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.15.0")
 
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
@@ -31,10 +35,9 @@ dependencies {
 	implementation("org.springdoc:springdoc-openapi-ui:1.8.0")
 	runtimeOnly("org.springdoc:springdoc-openapi-kotlin:1.8.0")
 
-
-
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
+	testImplementation("io.github.glytching:junit-extensions:2.6.0")
 	testImplementation("com.ninja-squad:springmockk:4.0.2")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 	testRuntimeOnly("com.h2database:h2:2.3.232")
@@ -48,4 +51,20 @@ kotlin {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+}
+
+jacoco {
+	toolVersion = "0.8.12"
+}
+
+tasks.jacocoTestReport {
+	dependsOn(tasks.test)
+	reports {
+		xml.required.set(true)
+		html.required.set(true)
+	}
+}
+
+tasks.test {
+	finalizedBy(tasks.jacocoTestReport)
 }

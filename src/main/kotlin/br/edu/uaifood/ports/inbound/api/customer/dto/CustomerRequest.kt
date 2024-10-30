@@ -1,4 +1,4 @@
-package br.edu.uaifood.ports.inbound.api
+package br.edu.uaifood.ports.inbound.api.customer.dto
 
 import com.fasterxml.jackson.annotation.JsonProperty
 

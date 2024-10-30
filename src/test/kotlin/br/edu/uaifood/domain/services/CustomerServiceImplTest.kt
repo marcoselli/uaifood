@@ -3,7 +3,7 @@ package br.edu.uaifood.domain.services
 import br.edu.uaifood.domain.entities.Customer
 import br.edu.uaifood.adapters.CustomerRepository
 import br.edu.uaifood.domain.entities.CustomerStatus.ACTIVE
-import br.edu.uaifood.ports.outbound.repository.customer.CustomerPersistence
+import br.edu.uaifood.ports.outbound.repository.customer.CustomerPersisted
 import io.mockk.every
 import io.mockk.mockk
 import org.assertj.core.api.AssertionsForClassTypes.assertThat
@@ -17,8 +17,8 @@ class CustomerServiceImplTest {
     fun whenPostCustomer_thenReturnCreatedCustomer() {
         //given
         val newCustomer = Customer("Name Surname", "910.933.630-37", "name.surname@gmail.com", ACTIVE)
-        val newCustomerPersistence = CustomerPersistence.from(newCustomer)
-        every { customerRepository.save(newCustomerPersistence) } returns newCustomerPersistence;
+        val newCustomerPersisted = CustomerPersisted.from(newCustomer)
+        every { customerRepository.save(newCustomerPersisted) } returns newCustomerPersisted;
 
         //when
         val result = customerService.createCustomer(newCustomer);

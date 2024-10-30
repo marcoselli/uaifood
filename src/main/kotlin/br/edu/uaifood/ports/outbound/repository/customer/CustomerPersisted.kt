@@ -7,7 +7,7 @@ import jakarta.persistence.Id
 import jakarta.persistence.*
 
 @Entity(name = "customer")
-data class CustomerPersistence(
+data class CustomerPersisted(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long?,
@@ -18,8 +18,8 @@ data class CustomerPersistence(
     var status: CustomerStatus
 ) {
     companion object {
-        fun from(customer: Customer): CustomerPersistence {
-            return CustomerPersistence(
+        fun from(customer: Customer): CustomerPersisted {
+            return CustomerPersisted(
                 id = null,
                 name = customer.name,
                 cpf = customer.cpf,

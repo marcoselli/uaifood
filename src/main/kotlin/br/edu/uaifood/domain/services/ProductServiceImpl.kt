@@ -1,0 +1,30 @@
+package br.edu.uaifood.domain.services
+
+import br.edu.uaifood.adapters.ProductService
+import br.edu.uaifood.domain.entities.Product
+import br.edu.uaifood.ports.inbound.api.product.dto.ProductResponse
+import br.edu.uaifood.ports.outbound.repository.product.ProductPersisted
+import br.edu.uaifood.adapters.ProductRepository
+import org.slf4j.LoggerFactory
+import org.springframework.stereotype.Service
+
+@Service
+class ProductServiceImpl(
+    private val productRepository: ProductRepository
+): ProductService {
+
+    private val logger = LoggerFactory.getLogger(this::class.java)
+
+    override fun insertIntoMenu(product: Product): ProductResponse {
+        logger.info("Inserting product ${product.name} into menu")
+        return runCatching {
+            productRepository.findByName(product.name)
+            .let { it.map { productPersisted -> Product.from(productPersisted) } }
+            .onEach { alreadySavedProduct -> alreadySavedProduct.ensureUniqueness(product)}
+            .let { productRepository.save(ProductPersisted.from(product)) }
+            .let { ProductResponse.from(it) }
+        }.onSuccess { logger.info("Product ${product.name} inserted into menu successfully")
+        }.onFailure { logger.info("Fail to insert Product ${product.name}: ${it.message}")
+        }.getOrThrow()
+    }
+}

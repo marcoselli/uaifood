@@ -94,30 +94,30 @@ class CustomerControllerTest @Autowired constructor(
             .andExpect(content().string("Invalid e-mail"))
     }
 
-//    @Test
-//    fun whenGetCustomerByCPF_thenReturnsStatus200() {
-//        val customer = Customer(
-//            name = "Name Surname",
-//            cpf = "910.933.630-37",
-//            email = "name.surname@gmail.com",
-//            status = CustomerStatus.ACTIVE
-//        )
-//
-//        val customerPersistence = CustomerPersisted.from(customer)
-//
-//        every { customerService.getByCpf(customer.cpf) } returns CustomerResponse.from(customerPersistence)
-//
-//        mockMvc.perform(
-//            get("/v1/customers?cpf=910.933.630-37")
-//                .contentType(MediaType.APPLICATION_JSON)
-//        )
-//            .andExpect(status().isOk)
-//            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-//            .andExpect(jsonPath("$.id").value(1))
-//            .andExpect(jsonPath("$.name").value("Name Surname"))
-//            .andExpect(jsonPath("$.cpf").value("91093363037"))
-//            .andExpect(jsonPath("$.e-mail").value("name.surname@gmail.com"))
-//            .andExpect(jsonPath("$.status").value("ACTIVE"))
-//    }
+    @Test
+    fun whenGetCustomerByCPF_thenReturnsStatus200() {
+        val customer = Customer(
+            name = "Name Surname",
+            cpf = "910.933.630-37",
+            email = "name.surname@gmail.com",
+            status = CustomerStatus.ACTIVE
+        )
+
+        val customerPersistence = CustomerPersisted.from(customer)
+
+        every { customerService.getByCpf(customer.cpf) } returns CustomerResponse.from(customerPersistence)
+
+        mockMvc.perform(
+            get("/v1/customers?cpf=910.933.630-37")
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.id").value(1))
+            .andExpect(jsonPath("$.name").value("Name Surname"))
+            .andExpect(jsonPath("$.cpf").value("91093363037"))
+            .andExpect(jsonPath("$.e-mail").value("name.surname@gmail.com"))
+            .andExpect(jsonPath("$.status").value("ACTIVE"))
+    }
 
 }

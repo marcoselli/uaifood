@@ -32,19 +32,19 @@ class CustomerRepositoryTest {
         assertThat(persisted.status).isEqualTo(ACTIVE)
     }
 
-//    @Test
-//    fun whenGetACustomerByCpf_thenReturnCustomer() {
-//        val newCustomer = Customer("Name Surname", "910.933.630-37", "name.surname@gmail.com", ACTIVE)
-//
-//        entityManager.persist(CustomerPersisted.from(newCustomer))
-//        entityManager.flush()
-//        val customer = customerRepository.findByCpf("910.933.630-37")
-//
-//        assertThat(customer.get().id).isEqualTo(1)
-//        assertThat(customer.get().name).isEqualTo("Name Surname")
-//        assertThat(customer.get().cpf).isEqualTo("910.933.630-37")
-//        assertThat(customer.get().email).isEqualTo("name.surname@gmail.com")
-//        assertThat(customer.get().status).isEqualTo(ACTIVE)
-//    }
+    @Test
+    fun whenGetACustomerByCpf_thenReturnCustomer() {
+        val newCustomer = Customer("Name Surname", "910.933.630-37", "name.surname@gmail.com", ACTIVE)
+
+        entityManager.persist(CustomerPersisted.from(newCustomer))
+        entityManager.flush()
+        val customer = customerRepository.findByCpf("910.933.630-37")
+
+        assertThat(customer.get().id).isEqualTo(1)
+        assertThat(customer.get().name).isEqualTo("Name Surname")
+        assertThat(customer.get().cpf).isEqualTo("910.933.630-37")
+        assertThat(customer.get().email).isEqualTo("name.surname@gmail.com")
+        assertThat(customer.get().status).isEqualTo(ACTIVE)
+    }
 
 }

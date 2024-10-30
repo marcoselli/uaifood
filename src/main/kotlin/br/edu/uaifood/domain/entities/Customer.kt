@@ -12,12 +12,12 @@ class Customer(
         fun from(request: CustomerRequest) =
             Customer(
                 name = request.name,
-                cpf = validateCPF(request.cpf),
+                cpf = validateCpf(request.cpf),
                 email = validateEmail(request.email),
                 status = CustomerStatus.ACTIVE
             )
 
-        fun validateCPF(cpf: String): String {
+        fun validateCpf(cpf: String): String {
             val cleanedCPF = cpf.replace(".", "").replace("-", "")
 
             if (cleanedCPF.length == 11 && validDigit(cleanedCPF)) {

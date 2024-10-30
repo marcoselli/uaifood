@@ -7,6 +7,7 @@ import br.edu.uaifood.ports.outbound.repository.customer.CustomerPersisted
 import io.mockk.every
 import io.mockk.mockk
 import org.assertj.core.api.AssertionsForClassTypes.assertThat
+import org.junit.jupiter.api.assertThrows
 import java.util.*
 import kotlin.test.Test
 
@@ -15,14 +16,14 @@ class CustomerServiceImplTest {
     private val customerService = CustomerServiceImpl(customerRepository)
 
     @Test
-    fun whenPostCustomer_thenReturnCreatedCustomer() {
+    fun `should save a customer successfully`() {
         //given
-        val newCustomer = Customer("Name Surname", "910.933.630-37", "name.surname@gmail.com", ACTIVE)
-        val newCustomerPersisted = CustomerPersisted.from(newCustomer)
-        every { customerRepository.save(newCustomerPersisted) } returns newCustomerPersisted;
+        val customer = Customer("Name Surname", "910.933.630-37", "name.surname@gmail.com", ACTIVE)
+        val customerPersisted = CustomerPersisted.from(customer)
+        every { customerRepository.save(customerPersisted) } returns customerPersisted;
 
         //when
-        val result = customerService.createCustomer(newCustomer);
+        val result = customerService.createCustomer(customer);
 
         //then
         assertThat(result.name).isEqualTo("Name Surname")
@@ -32,15 +33,14 @@ class CustomerServiceImplTest {
     }
 
     @Test
-    fun whenGetCustomerByCpf_thenReturnCustomer() {
+    fun `should find a customer by cpf successfully`() {
         //given
-        val newCustomer = Customer("Name Surname", "910.933.630-37", "name.surname@gmail.com", ACTIVE)
-        val newCustomerPersistence = Optional.of(CustomerPersisted.from(newCustomer))
-
-        every { customerRepository.findByCpf("910.933.630-37") } returns newCustomerPersistence;
+        val customer = Customer("Name Surname", "910.933.630-37", "name.surname@gmail.com", ACTIVE)
+        val customerPersisted = Optional.of(CustomerPersisted.from(customer))
+        every { customerRepository.findByCpf("910.933.630-37") } returns customerPersisted
 
         //when
-        val result = customerService.createCustomer(newCustomer);
+        val result = customerService.findCustomerByCpf("910.933.630-37");
 
         //then
         assertThat(result.name).isEqualTo("Name Surname")
@@ -49,6 +49,18 @@ class CustomerServiceImplTest {
         assertThat(result.status).isEqualTo(ACTIVE)
     }
 
+    @Test
+    fun `should throw a exception when customer is not found`() {
+        //given
+        every { customerRepository.findByCpf("910.933.630-37") } returns Optional.empty()
 
+        //when
+        val exception = assertThrows<Exception> {
+            customerService.findCustomerByCpf("910.933.630-37");
+        }
+
+        //then
+        assertThat(exception.message).isEqualTo("Customer Not Found")
+    }
 
 }

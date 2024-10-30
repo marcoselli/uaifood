@@ -1,4 +1,4 @@
-package br.edu.uaifood.ports.inbound.api
+package br.edu.uaifood.ports.inbound.api.customer
 
 import br.edu.uaifood.adapters.CustomerService
 import br.edu.uaifood.domain.entities.Customer
@@ -34,7 +34,6 @@ class CustomerController(var service: CustomerService) {
         }
     }
 
-
     @Operation(summary = "Get a customer by Cpf", description = "Returns 200 if successful")
     @ApiResponses(
         value = [
@@ -43,14 +42,12 @@ class CustomerController(var service: CustomerService) {
         ]
     )
     @GetMapping
-    fun getCustomerByCpf(@RequestParam cpf: String): ResponseEntity<Any> {
+    fun findCustomerByCpf(@RequestParam cpf: String): ResponseEntity<Any> {
         return try {
-            val customer = service.getByCpf(Customer.validateCPF(cpf))
+            val customer = service.findCustomerByCpf(Customer.validateCpf(cpf))
             status(HttpStatus.OK).body(customer)
         } catch (e: Exception) {
             status(HttpStatus.NOT_FOUND).body(e.message)
         }
     }
-
-
 }

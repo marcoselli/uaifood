@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-interface CustomerRepository : JpaRepository<CustomerPersisted, Long>{
+interface CustomerRepository : JpaRepository<CustomerPersisted, Long> {
     fun findByCpf(cpf: String): Optional<CustomerPersisted>
 }

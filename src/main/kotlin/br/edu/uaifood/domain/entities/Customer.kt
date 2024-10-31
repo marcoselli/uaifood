@@ -18,7 +18,7 @@ class Customer(
                 status = CustomerStatus.ACTIVE
             )
 
-        fun validateCpf(cpf: String): String {
+        private fun validateCpf(cpf: String): String {
             val cleanedCPF = cpf.replace(".", "").replace("-", "")
 
             if (cleanedCPF.length == 11 && validDigit(cleanedCPF)) {

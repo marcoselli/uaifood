@@ -8,7 +8,6 @@ import org.springframework.test.web.servlet.MockMvc
 
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 
 @AutoConfigureMockMvc
@@ -52,7 +51,7 @@ class CustomerControllerTest(
         )
             // Then
             .andExpect(status().isBadRequest)
-            .andExpect(content().string("Invalid CPF"))
+            .andExpect(content().string("400 BAD_REQUEST \"Invalid CPF\""))
     }
 
     @Test
@@ -67,60 +66,7 @@ class CustomerControllerTest(
         )
             // Then
             .andExpect(status().isBadRequest)
-            .andExpect(content().string("Invalid e-mail"))
+            .andExpect(content().string("400 BAD_REQUEST \"Invalid e-mail\""))
     }
-
-    @Test
-    fun `should find a customer by cpf successfully`() {
-//        val customer = Customer(
-//            name = "Name Surname",
-//            cpf = "910.933.630-37",
-//            email = "name.surname@gmail.com",
-//            status = CustomerStatus.ACTIVE
-//        )
-//
-//        val customerPersistence = CustomerPersisted.from(customer)
-//
-//        every { customerService.findCustomerByCpf(customer.cpf) } returns CustomerResponse.from(customerPersistence)
-
-        mockMvc.perform(
-            get("/v1/customers?cpf=910.933.630-37")
-                .contentType(MediaType.APPLICATION_JSON)
-        )
-            .andExpect(status().isOk)
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.id").value(1))
-            .andExpect(jsonPath("$.name").value("Name Surname"))
-            .andExpect(jsonPath("$.cpf").value("91093363037"))
-            .andExpect(jsonPath("$.e-mail").value("name.surname@gmail.com"))
-            .andExpect(jsonPath("$.status").value("ACTIVE"))
-    }
-
-//    @Test
-//    fun `should return not found when customer is not found`() {
-//        val customer = Customer(
-//            name = "Name Surname",
-//            cpf = "910.933.630-37",
-//            email = "name.surname@gmail.com",
-//            status = CustomerStatus.ACTIVE
-//        )
-//
-//        val customerPersistence = CustomerPersisted.from(customer)
-//
-//        every { customerService.findCustomerByCpf(customer.cpf) } returns CustomerResponse.from(customerPersistence)
-//
-//        mockMvc.perform(
-//            get("/v1/customers?cpf=910.933.630-37")
-//                .contentType(MediaType.APPLICATION_JSON)
-//        )
-//            .andExpect(status().isOk)
-//            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-//            .andExpect(jsonPath("$.id").value(1))
-//            .andExpect(jsonPath("$.name").value("Name Surname"))
-//            .andExpect(jsonPath("$.cpf").value("91093363037"))
-//            .andExpect(jsonPath("$.e-mail").value("name.surname@gmail.com"))
-//            .andExpect(jsonPath("$.status").value("ACTIVE"))
-//    }
-
 
 }

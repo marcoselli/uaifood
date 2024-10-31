@@ -4,6 +4,6 @@ import br.edu.uaifood.domain.entities.Customer
 import br.edu.uaifood.ports.inbound.api.customer.dto.CustomerResponse
 
 interface CustomerService {
-    fun createCustomer(newCustomer: Customer): CustomerResponse
+    fun createCustomer(customer: Customer): CustomerResponse
     fun findCustomerByCpf(cpf: String): CustomerResponse
 }

@@ -6,9 +6,7 @@ import br.edu.uaifood.ports.inbound.api.customer.dto.CustomerRequest
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
-import org.springframework.http.HttpStatus
-import org.springframework.http.HttpStatus.BAD_REQUEST
-import org.springframework.http.HttpStatus.CREATED
+import org.springframework.http.HttpStatus.*
 import org.springframework.http.ResponseEntity
 import org.springframework.http.ResponseEntity.*
 import org.springframework.web.bind.annotation.*
@@ -45,9 +43,9 @@ class CustomerController(var service: CustomerService) {
     fun findCustomerByCpf(@RequestParam cpf: String): ResponseEntity<Any> {
         return try {
             val customer = service.findCustomerByCpf(Customer.validateCpf(cpf))
-            status(HttpStatus.OK).body(customer)
+            status(OK).body(customer)
         } catch (e: Exception) {
-            status(HttpStatus.NOT_FOUND).body(e.message)
+            status(NOT_FOUND).body(e.message)
         }
     }
 }

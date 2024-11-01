@@ -7,5 +7,5 @@ import java.util.UUID
 
 @Repository
 interface ProductRepository: JpaRepository<ProductPersisted, UUID>  {
-    fun findByName(name: String): List<ProductPersisted>
+    fun findByName(name: String): ProductPersisted?
 }

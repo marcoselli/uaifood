@@ -16,13 +16,23 @@ data class ProductPersisted(
     val imageUrl: String
 ) {
     companion object {
-        fun from(product: Product): ProductPersisted =
+        fun from(newProduct: Product): ProductPersisted =
             ProductPersisted(
-                name = product.name,
-                description = product.description,
-                price = product.price,
-                category = product.category.name,
-                imageUrl = product.imageUrl
+                name = newProduct.name,
+                description = newProduct.description,
+                price = newProduct.price,
+                category = newProduct.category.name,
+                imageUrl = newProduct.imageUrl
+            )
+
+        fun from(existingId: UUID, updatedProduct: Product): ProductPersisted =
+            ProductPersisted(
+                id = existingId,
+                name = updatedProduct.name,
+                description = updatedProduct.description,
+                price = updatedProduct.price,
+                category = updatedProduct.category.name,
+                imageUrl = updatedProduct.imageUrl
             )
     }
 }

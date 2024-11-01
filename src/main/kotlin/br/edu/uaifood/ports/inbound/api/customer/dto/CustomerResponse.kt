@@ -5,15 +5,11 @@ import br.edu.uaifood.ports.outbound.repository.customer.CustomerPersisted
 import com.fasterxml.jackson.annotation.JsonProperty
 
 data class CustomerResponse(
-    @JsonProperty("id")
     var id: Long?,
-    @JsonProperty("name")
     var name: String,
-    @JsonProperty("cpf")
     var cpf: String,
     @JsonProperty("e-mail")
     var email: String,
-    @JsonProperty("status")
     var status: CustomerStatus
 ) {
     companion object {

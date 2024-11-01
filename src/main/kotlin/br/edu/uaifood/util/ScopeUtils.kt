@@ -3,8 +3,8 @@ package br.edu.uaifood.util
 class ScopeUtils {
 
     companion object {
-        const val ENV_SCOPE = "SCOPE"
-        const val PROD_SCOPE = "production"
+        private const val ENV_SCOPE = "SCOPE"
+        private const val PROD_SCOPE = "production"
 
         fun getProfileFromScope(): String {
             val scope = System.getenv(ENV_SCOPE)

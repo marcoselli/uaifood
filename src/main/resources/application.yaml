@@ -8,3 +8,20 @@ spring:
       write-dates-as-timestamps: true
     deserialization:
       fail-on-unknown-properties: false
+
+springdoc:
+  api-docs:
+    path: /specs/swagger.json
+  documentation:
+    swagger:
+      v2:
+        api:
+          info:
+            title: "Api Swagger Test"
+            description: "Projeto exemplo swagger"
+            contact:
+              name: "Nithack"
+              email: "nithack@nithack.com"
+            version: "1.0.0"
+            license: "Apache License Version 2.0"
+            licenseUrl: "https://www.apache.org/licenses/LICENSE-2.0"

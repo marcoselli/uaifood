@@ -12,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
 import org.assertj.core.api.AssertionsForClassTypes.assertThat
 import org.junit.jupiter.api.extension.ExtendWith
+import java.time.LocalDateTime
 import kotlin.test.Test
 
 @ExtendWith(RandomBeansExtension::class)
@@ -30,17 +31,19 @@ class OrderRepositoryTest {
         @Random secondRandomProduct: Product
     ) {
         //given
-        entityManager.persist(OrderPersisted.from(Order(listOf(firstRandomProduct), RECEIVED)))
-        entityManager.persist(OrderPersisted.from(Order(listOf(firstRandomProduct, secondRandomProduct), READY)))
+        entityManager.persist(OrderPersisted.from(Order(listOf(firstRandomProduct), RECEIVED, LocalDateTime.parse("2023-06-20T19:34:50.63"))))
+        entityManager.persist(OrderPersisted.from(Order(listOf(firstRandomProduct, secondRandomProduct), READY, LocalDateTime.parse("2023-12-26T07:12:10.02"))))
 
         //when
         val orders = orderRepository.findAll()
 
         //then
         assertThat(orders[0].status).isEqualTo(RECEIVED)
+        assertThat(orders[0].creationDate).isEqualTo("2023-06-20T19:34:50.63")
         assertThat(orders[0].products.size).isEqualTo(1)
         assertThat(orders[0].products[0].name).isEqualTo(firstRandomProduct.name)
         assertThat(orders[1].status).isEqualTo(READY)
+        assertThat(orders[1].creationDate).isEqualTo("2023-12-26T07:12:10.02")
         assertThat(orders[1].products.size).isEqualTo(2)
         assertThat(orders[1].products[0].name).isEqualTo(firstRandomProduct.name)
         assertThat(orders[1].products[1].name).isEqualTo(secondRandomProduct.name)

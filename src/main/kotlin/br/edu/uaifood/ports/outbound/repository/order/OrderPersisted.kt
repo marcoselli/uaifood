@@ -3,6 +3,8 @@ package br.edu.uaifood.ports.outbound.repository.order
 import br.edu.uaifood.domain.entities.*
 import br.edu.uaifood.ports.outbound.repository.product.ProductPersisted
 import jakarta.persistence.*
+import java.time.LocalDateTime
+
 
 @Entity(name = "food_order")
 data class OrderPersisted(
@@ -17,14 +19,16 @@ data class OrderPersisted(
     )
     var products: List<ProductPersisted> = emptyList(),
     @Enumerated(EnumType.STRING)
-    var status: OrderStatus
+    var status: OrderStatus,
+    var creationDate: LocalDateTime
 ) {
     companion object {
         fun from(order: Order): OrderPersisted {
             return OrderPersisted(
                 id = null,
                 status = order.status,
-                products = order.products.map { ProductPersisted.from(it) }
+                products = order.products.map { ProductPersisted.from(it) },
+                creationDate = order.creationDate
             )
         }
     }

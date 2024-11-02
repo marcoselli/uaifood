@@ -17,6 +17,8 @@ import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
+import java.time.LocalDateTime
+
 
 @AutoConfigureMockMvc
 @SpringBootTest
@@ -31,8 +33,8 @@ class OrderControllerTest(
     @Test
     fun `should find all orders`(@Random randomProduct: ProductPersisted) {
         // Given
-        val firstOrder = OrderPersisted(1, listOf(randomProduct), READY)
-        val secondOrder = OrderPersisted(2, listOf(randomProduct), FINISHED)
+        val firstOrder = OrderPersisted(1, listOf(randomProduct), READY, LocalDateTime.parse("2023-12-23T19:34:50.63"))
+        val secondOrder = OrderPersisted(2, listOf(randomProduct), FINISHED,  LocalDateTime.parse("2023-06-20T07:12:10.02"))
 
         // When
         every { orderRepository.findAll() } returns listOf(firstOrder, secondOrder)
@@ -44,8 +46,10 @@ class OrderControllerTest(
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.[0].status").value("READY"))
+            .andExpect(jsonPath("$.[0].creation_date").value("2023-12-23T19:34:50.630"))
             .andExpect(jsonPath("$.[0].products[0].name").value(randomProduct.name))
             .andExpect(jsonPath("$.[1].status").value("FINISHED"))
+            .andExpect(jsonPath("$.[1].creation_date").value("2023-06-20T07:12:10.020"))
             .andExpect(jsonPath("$.[1].products[0].name").value(randomProduct.name))
     }
 }

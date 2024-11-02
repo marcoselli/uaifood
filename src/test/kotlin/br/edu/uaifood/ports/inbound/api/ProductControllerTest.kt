@@ -18,6 +18,7 @@ import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
+import java.util.*
 
 @AutoConfigureMockMvc
 @SpringBootTest
@@ -107,6 +108,47 @@ class ProductControllerTest(
         // When
         mockMvc.perform(delete("/v1/products/ANY_PRODUCT_NAME_HERE"))
         // Then
+            .andExpect(status().isNoContent)
+    }
+
+    @Test
+    fun `should return a list of products given a category name`() {
+        // Given
+        val category = "SNACK"
+        val returnProducts = List(10){
+            ProductPersisted(
+                id = UUID.randomUUID(),
+                name = "Chips",
+                category = category,
+                price = 1.99,
+                description = "Crocante e saboroso",
+                imageUrl = "http://example.com/chips.png"
+            )}
+
+        every { productRepository.findByCategory(category)} returns returnProducts
+
+        // When
+        mockMvc.perform(
+            get("/v1/products?category=$category")
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            // Then
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$[1].category").value("SNACK"))
+    }
+
+    @Test
+    fun `when returning an empty list of products it should return a 204 status code`() {
+        // Given
+        every { productRepository.findByCategory(any())} returns emptyList()
+
+        // When
+        mockMvc.perform(
+            get("/v1/products?category=SNACK")
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            // Then
             .andExpect(status().isNoContent)
     }
 

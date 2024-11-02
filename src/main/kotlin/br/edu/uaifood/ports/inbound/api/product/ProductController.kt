@@ -64,4 +64,22 @@ class ProductController(
     fun removeFromMenu(@PathVariable("product_name") productName: String): ResponseEntity<Void> =
         productService.removeFromMenu(productName)
             .let { ResponseEntity.noContent().build() }
+
+    @Operation(summary = "Retrieve products by category", description = "Product List")
+    @ApiResponses(
+        value = [
+            ApiResponse(responseCode = "200", description = "Product list with content"),
+            ApiResponse(responseCode = "204", description = "Product list empty"),
+        ]
+    )
+    @GetMapping
+    fun getProductsByCategory(@RequestParam category: String): ResponseEntity<List<ProductResponse>> =
+        productService.findProductsByCategory(category)
+            .let { products ->
+                if (products.isEmpty()) {
+                    ResponseEntity.noContent().build()
+                } else {
+                    ResponseEntity.ok(products)
+                }
+            }
 }

@@ -12,6 +12,9 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
+import java.util.*
+import kotlin.test.assertContains
+import kotlin.test.assertTrue
 
 
 @ExtendWith(RandomBeansExtension::class)
@@ -102,5 +105,29 @@ class ProductServiceImplTest {
         productService.removeFromMenu("ANY_PRODUCT_NAME_HERE")
         // Then
         verify(exactly = 0) { productRepository.deleteById(any()) }
+    }
+
+    @Test
+    fun `should find a list of products given a category name`() {
+        // Given
+        val category = "SNACK"
+        val returnProducts = List(10){
+                    ProductPersisted(
+                        id = UUID.randomUUID(),
+                        name = "Chips",
+                        category = category,
+                        price = 1.99,
+                        description = "Crocante e saboroso",
+                        imageUrl = "http://example.com/chips.png"
+                    )}
+
+        every { productRepository.findByCategory(category)} returns returnProducts
+
+        // When
+        val result: List<ProductResponse> = productService.findProductsByCategory(category)
+
+        // Then
+        assertTrue(result.all { it.category == category })
+        verify(exactly = 1) { productRepository.findByCategory(category) }
     }
 }

@@ -3,13 +3,15 @@ package br.edu.uaifood.ports.outbound.repository.order
 import br.edu.uaifood.domain.entities.*
 import br.edu.uaifood.ports.outbound.repository.product.ProductPersisted
 import jakarta.persistence.*
+import jakarta.persistence.EnumType.STRING
+import jakarta.persistence.GenerationType.IDENTITY
 import java.time.LocalDateTime
 
 
 @Entity(name = "food_order")
 data class OrderPersisted(
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = IDENTITY)
     var id: Long?,
     @ManyToMany
     @JoinTable(
@@ -18,7 +20,7 @@ data class OrderPersisted(
         inverseJoinColumns = [JoinColumn(name = "product_id")]
     )
     var products: List<ProductPersisted> = emptyList(),
-    @Enumerated(EnumType.STRING)
+    @Enumerated(STRING)
     var status: OrderStatus,
     var creationDate: LocalDateTime
 ) {

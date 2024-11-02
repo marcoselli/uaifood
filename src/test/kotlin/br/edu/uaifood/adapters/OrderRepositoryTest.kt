@@ -12,7 +12,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
 import org.assertj.core.api.AssertionsForClassTypes.assertThat
 import org.junit.jupiter.api.extension.ExtendWith
-import java.time.LocalDateTime
+import java.time.LocalDateTime.parse
 import kotlin.test.Test
 
 @ExtendWith(RandomBeansExtension::class)
@@ -31,8 +31,8 @@ class OrderRepositoryTest {
         @Random secondRandomProduct: Product
     ) {
         //given
-        entityManager.persist(OrderPersisted.from(Order(listOf(firstRandomProduct), RECEIVED, LocalDateTime.parse("2023-06-20T19:34:50.63"))))
-        entityManager.persist(OrderPersisted.from(Order(listOf(firstRandomProduct, secondRandomProduct), READY, LocalDateTime.parse("2023-12-26T07:12:10.02"))))
+        entityManager.persist(OrderPersisted.from(Order(listOf(firstRandomProduct), RECEIVED, parse("2023-06-20T19:34:50.63"))))
+        entityManager.persist(OrderPersisted.from(Order(listOf(firstRandomProduct, secondRandomProduct), READY, parse("2023-12-26T07:12:10.02"))))
 
         //when
         val orders = orderRepository.findAll()

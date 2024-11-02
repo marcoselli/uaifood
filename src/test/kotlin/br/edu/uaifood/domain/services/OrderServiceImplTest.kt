@@ -11,6 +11,7 @@ import io.github.glytching.junit.extension.random.RandomBeansExtension
 import io.mockk.every
 import org.junit.jupiter.api.extension.ExtendWith
 import java.time.LocalDateTime
+import java.time.LocalDateTime.parse
 import kotlin.test.Test
 
 @ExtendWith(RandomBeansExtension::class)
@@ -24,8 +25,8 @@ class OrderServiceImplTest {
         @Random secondRandomProduct: ProductPersisted
     ) {
         //given
-        val firstOrder = OrderPersisted(1, listOf(firstRandomProduct), RECEIVED, LocalDateTime.parse("2023-06-20T19:34:50.63"))
-        val secondOrder = OrderPersisted(2, listOf(firstRandomProduct, secondRandomProduct), IN_PREPARATION, LocalDateTime.parse("2023-12-23T07:12:10.02"))
+        val firstOrder = OrderPersisted(1, listOf(firstRandomProduct), RECEIVED, parse("2023-06-20T19:34:50.63"))
+        val secondOrder = OrderPersisted(2, listOf(firstRandomProduct, secondRandomProduct), IN_PREPARATION, parse("2023-12-23T07:12:10.02"))
 
         every { orderRepository.findAll() } returns listOf(firstOrder, secondOrder)
 

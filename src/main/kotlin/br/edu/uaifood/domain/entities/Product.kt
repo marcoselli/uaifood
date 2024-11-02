@@ -51,7 +51,6 @@ data class Product(
             throw ProductValidationException("Product ${this.name} already exists in another category")
     }
 
-
 }
 
 enum class ProductCategory {

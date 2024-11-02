@@ -36,7 +36,7 @@ class CustomerServiceImplTest {
     fun `should find a customer by cpf successfully`() {
         //given
         val customer = Customer("Name Surname", "910.933.630-37", "name.surname@gmail.com", ACTIVE)
-        val customerPersisted = Optional.of(CustomerPersisted.from(customer))
+        val customerPersisted = CustomerPersisted.from(customer)
         every { customerRepository.findByCpf("910.933.630-37") } returns customerPersisted
 
         //when
@@ -52,7 +52,7 @@ class CustomerServiceImplTest {
     @Test
     fun `should throw a exception when customer is not found`() {
         //given
-        every { customerRepository.findByCpf("910.933.630-37") } returns Optional.empty()
+        every { customerRepository.findByCpf("910.933.630-37") } returns null
 
         //when
         val exception = assertThrows<Exception> {
@@ -60,7 +60,7 @@ class CustomerServiceImplTest {
         }
 
         //then
-        assertThat(exception.message).isEqualTo("Customer Not Found")
+        assertThat(exception.message).isEqualTo("404 NOT_FOUND \"Customer for cpf 910.933.630-37 not found\"")
     }
 
 }

@@ -7,5 +7,5 @@ import java.util.*
 
 @Repository
 interface CustomerRepository : JpaRepository<CustomerPersisted, Long> {
-    fun findByCpf(cpf: String): Optional<CustomerPersisted>
+    fun findByCpf(cpf: String): CustomerPersisted?
 }

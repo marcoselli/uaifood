@@ -1,4 +1,5 @@
 package br.edu.uaifood.ports.inbound.api
+
 import br.edu.uaifood.util.JsonReader
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -8,6 +9,7 @@ import org.springframework.test.web.servlet.MockMvc
 
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 
 @AutoConfigureMockMvc
@@ -51,7 +53,9 @@ class CustomerControllerTest(
         )
             // Then
             .andExpect(status().isBadRequest)
-            .andExpect(content().string("400 BAD_REQUEST \"Invalid CPF\""))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.status_code").value(400))
+            .andExpect(jsonPath("$.message").value("Invalid CPF"))
     }
 
     @Test
@@ -66,7 +70,34 @@ class CustomerControllerTest(
         )
             // Then
             .andExpect(status().isBadRequest)
-            .andExpect(content().string("400 BAD_REQUEST \"Invalid e-mail\""))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.status_code").value(400))
+            .andExpect(jsonPath("$.message").value("Invalid e-mail"))
     }
 
+    @Test
+    fun `should return not found when customer is not found`() {
+
+        mockMvc.perform(
+            get("/v1/customers?cpf=910.933.630-37")
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(status().isNotFound)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.status_code").value(404))
+            .andExpect(jsonPath("$.message").value("Customer for cpf 91093363037 not found"))
+    }
+
+    @Test
+    fun `should return bad request when try to find customer by invalid cpf`() {
+
+        mockMvc.perform(
+            get("/v1/customers?cpf=111.222.333-44")
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.status_code").value(400))
+            .andExpect(jsonPath("$.message").value("Invalid CPF"))
+    }
 }

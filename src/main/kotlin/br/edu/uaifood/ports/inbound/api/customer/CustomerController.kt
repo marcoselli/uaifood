@@ -7,7 +7,6 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import org.springframework.http.HttpStatus.*
-import org.springframework.http.ResponseEntity
 import org.springframework.http.ResponseEntity.*
 import org.springframework.web.bind.annotation.*
 
@@ -23,14 +22,9 @@ class CustomerController(var service: CustomerService) {
         ]
     )
     @PostMapping
-    fun createCustomer(@RequestBody customerRequest: CustomerRequest): ResponseEntity<Any> {
-        return try {
-            val created = service.createCustomer(Customer.from(customerRequest))
-            status(CREATED).body(created)
-        } catch (e: Exception) {
-            status(BAD_REQUEST).body(e.message)
-        }
-    }
+    fun createCustomer(@RequestBody customerRequest: CustomerRequest) =
+        service.createCustomer(Customer.from(customerRequest))
+            .let { status(CREATED).body(it) }
 
     @Operation(summary = "Get a customer by Cpf", description = "Returns 200 if successful")
     @ApiResponses(
@@ -40,12 +34,7 @@ class CustomerController(var service: CustomerService) {
         ]
     )
     @GetMapping
-    fun findCustomerByCpf(@RequestParam cpf: String): ResponseEntity<Any> {
-        return try {
-            val customer = service.findCustomerByCpf(Customer.validateCpf(cpf))
-            status(OK).body(customer)
-        } catch (e: Exception) {
-            status(NOT_FOUND).body(e.message)
-        }
-    }
+    fun findCustomerByCpf(@RequestParam cpf: String) =
+        service.findCustomerByCpf(Customer.validateCpf(cpf))
+            .let { status(OK).body(it) }
 }

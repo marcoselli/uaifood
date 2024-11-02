@@ -3,6 +3,7 @@ package br.edu.uaifood.domain.services
 import br.edu.uaifood.domain.entities.Customer
 import br.edu.uaifood.adapters.CustomerRepository
 import br.edu.uaifood.adapters.CustomerService
+import br.edu.uaifood.exception.CustomerNotFoundException
 import br.edu.uaifood.ports.inbound.api.customer.dto.CustomerResponse
 import br.edu.uaifood.ports.outbound.repository.customer.CustomerPersisted
 import org.slf4j.LoggerFactory
@@ -26,15 +27,10 @@ class CustomerServiceImpl(private val repository: CustomerRepository) : Customer
     override fun findCustomerByCpf(cpf: String): CustomerResponse {
         logger.info("Getting customer by cpf")
         return runCatching {
-            repository.findByCpf(cpf).let {
-                if (it.isPresent) {
-                    CustomerResponse.from(it.get())
-                } else {
-                    throw Exception("Customer Not Found")
-                }
-            }
+            val customer =
+                repository.findByCpf(cpf) ?: throw CustomerNotFoundException("Customer for cpf $cpf not found")
+            CustomerResponse.from(customer)
         }.onFailure { logger.info("Fail to find Customer: ${it.message}")
         }.getOrThrow()
-
     }
 }

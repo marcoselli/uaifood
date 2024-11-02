@@ -43,9 +43,9 @@ class CustomerRepositoryTest {
         val customer = customerRepository.findByCpf("910.933.630-37")
 
         //then
-        assertThat(customer.get().name).isEqualTo("Name Surname")
-        assertThat(customer.get().cpf).isEqualTo("910.933.630-37")
-        assertThat(customer.get().email).isEqualTo("name.surname@gmail.com")
-        assertThat(customer.get().status).isEqualTo(ACTIVE)
+        assertThat(customer?.name).isEqualTo("Name Surname")
+        assertThat(customer?.cpf).isEqualTo("910.933.630-37")
+        assertThat(customer?.email).isEqualTo("name.surname@gmail.com")
+        assertThat(customer?.status).isEqualTo(ACTIVE)
     }
 }

@@ -1,11 +1,11 @@
 package br.edu.uaifood.ports.inbound.api
 
 import br.edu.uaifood.adapters.OrderRepository
-import br.edu.uaifood.domain.entities.OrderStatus.READY
-import br.edu.uaifood.domain.entities.OrderStatus.RECEIVED
+import br.edu.uaifood.domain.entities.OrderStatus.*
 import br.edu.uaifood.ports.outbound.repository.order.OrderPersisted
-import br.edu.uaifood.util.JsonReader
+import br.edu.uaifood.ports.outbound.repository.product.ProductPersisted
 import com.ninjasquad.springmockk.MockkBean
+import io.github.glytching.junit.extension.random.Random
 import io.github.glytching.junit.extension.random.RandomBeansExtension
 import io.mockk.every
 import org.junit.jupiter.api.Test
@@ -17,14 +17,11 @@ import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
-import java.util.ArrayList
 
 @AutoConfigureMockMvc
 @SpringBootTest
 @ExtendWith(RandomBeansExtension::class)
 class OrderControllerTest(
-    @Autowired
-    private val jsonReader: JsonReader,
     @Autowired
     private val mockMvc: MockMvc
 ) {
@@ -32,24 +29,23 @@ class OrderControllerTest(
     private lateinit var orderRepository: OrderRepository
 
     @Test
-    fun `should return order list`() {
+    fun `should find all orders`(@Random randomProduct: ProductPersisted) {
         // Given
-        val orders = ArrayList<OrderPersisted>()
-        orders.add(OrderPersisted(1, RECEIVED))
-        orders.add(OrderPersisted(2, READY))
+        val firstOrder = OrderPersisted(1, listOf(randomProduct), READY)
+        val secondOrder = OrderPersisted(2, listOf(randomProduct), FINISHED)
 
         // When
-        every { orderRepository.findAll() } returns orders
+        every { orderRepository.findAll() } returns listOf(firstOrder, secondOrder)
 
         mockMvc.perform(
             get("/v1/orders")
-
-                .contentType(MediaType.APPLICATION_JSON)
         )
             // Then
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.[0].status").value("RECEIVED"))
-            .andExpect(jsonPath("$.[1].status").value("READY"))
+            .andExpect(jsonPath("$.[0].status").value("READY"))
+            .andExpect(jsonPath("$.[0].products[0].name").value(randomProduct.name))
+            .andExpect(jsonPath("$.[1].status").value("FINISHED"))
+            .andExpect(jsonPath("$.[1].products[0].name").value(randomProduct.name))
     }
 }

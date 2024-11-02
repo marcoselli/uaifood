@@ -16,8 +16,8 @@ data class ProductPersisted(
     val price: Double,
     val category: String,
     val imageUrl: String,
-    @ManyToMany
-    val order: ArrayList<OrderPersisted>
+    @ManyToMany(mappedBy = "products")
+    val orders: List<OrderPersisted> = emptyList()
 ) {
     companion object {
         fun from(newProduct: Product): ProductPersisted =
@@ -26,8 +26,7 @@ data class ProductPersisted(
                 description = newProduct.description,
                 price = newProduct.price,
                 category = newProduct.category.name,
-                imageUrl = newProduct.imageUrl,
-                order = ArrayList<OrderPersisted>()
+                imageUrl = newProduct.imageUrl
             )
 
         fun from(existingId: UUID, updatedProduct: Product): ProductPersisted =
@@ -37,8 +36,7 @@ data class ProductPersisted(
                 description = updatedProduct.description,
                 price = updatedProduct.price,
                 category = updatedProduct.category.name,
-                imageUrl = updatedProduct.imageUrl,
-                order = ArrayList<OrderPersisted>()
+                imageUrl = updatedProduct.imageUrl
             )
     }
 }

@@ -3,12 +3,12 @@ package br.edu.uaifood.ports.outbound.repository.order
 import br.edu.uaifood.domain.entities.*
 import jakarta.persistence.*
 
-@Entity(name = "order")
+@Entity(name = "food_order")
 data class OrderPersisted(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long?,
-    @OneToMany(mappedBy="product")
+//    @OneToMany(mappedBy="product")
 //    var products: List<Product>,
     @Enumerated(EnumType.STRING)
     var status: OrderStatus

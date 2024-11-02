@@ -31,8 +31,8 @@ class OrderRepositoryTest {
         @Random secondRandomProduct: Product
     ) {
         //given
-        entityManager.persist(OrderPersisted.from(Order(listOf(firstRandomProduct), RECEIVED, parse("2023-06-20T19:34:50.63"))))
-        entityManager.persist(OrderPersisted.from(Order(listOf(firstRandomProduct, secondRandomProduct), READY, parse("2023-12-26T07:12:10.02"))))
+        entityManager.persist(OrderPersisted.from(Order(listOf(firstRandomProduct), RECEIVED, parse("2023-06-20T19:34:50.63"), null)))
+        entityManager.persist(OrderPersisted.from(Order(listOf(firstRandomProduct, secondRandomProduct), READY, parse("2023-12-26T07:12:10.02"), "910.933.630-37")))
 
         //when
         val orders = orderRepository.findAll()
@@ -40,10 +40,12 @@ class OrderRepositoryTest {
         //then
         assertThat(orders[0].status).isEqualTo(RECEIVED)
         assertThat(orders[0].creationDate).isEqualTo("2023-06-20T19:34:50.63")
+        assertThat(orders[0].customerCPF).isEqualTo(null)
         assertThat(orders[0].products.size).isEqualTo(1)
         assertThat(orders[0].products[0].name).isEqualTo(firstRandomProduct.name)
         assertThat(orders[1].status).isEqualTo(READY)
         assertThat(orders[1].creationDate).isEqualTo("2023-12-26T07:12:10.02")
+        assertThat(orders[1].customerCPF).isEqualTo("910.933.630-37")
         assertThat(orders[1].products.size).isEqualTo(2)
         assertThat(orders[1].products[0].name).isEqualTo(firstRandomProduct.name)
         assertThat(orders[1].products[1].name).isEqualTo(secondRandomProduct.name)

@@ -25,8 +25,8 @@ class OrderServiceImplTest {
         @Random secondRandomProduct: ProductPersisted
     ) {
         //given
-        val firstOrder = OrderPersisted(1, listOf(firstRandomProduct), RECEIVED, parse("2023-06-20T19:34:50.63"))
-        val secondOrder = OrderPersisted(2, listOf(firstRandomProduct, secondRandomProduct), IN_PREPARATION, parse("2023-12-23T07:12:10.02"))
+        val firstOrder = OrderPersisted(1, listOf(firstRandomProduct), RECEIVED, parse("2023-06-20T19:34:50.63"), null)
+        val secondOrder = OrderPersisted(2, listOf(firstRandomProduct, secondRandomProduct), IN_PREPARATION, parse("2023-12-23T07:12:10.02"), "910.933.630-37")
 
         every { orderRepository.findAll() } returns listOf(firstOrder, secondOrder)
 

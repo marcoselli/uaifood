@@ -42,8 +42,8 @@ private val jsonReader: JsonReader,
             @Test
     fun `should find all orders`(@Random randomProduct: ProductPersisted) {
         // Given
-        val firstOrder = OrderPersisted(1, listOf(randomProduct), READY, LocalDateTime.parse("2023-12-23T19:34:50.63"))
-        val secondOrder = OrderPersisted(2, listOf(randomProduct), FINISHED,  LocalDateTime.parse("2023-06-20T07:12:10.02"))
+        val firstOrder = OrderPersisted(1, listOf(randomProduct), READY, LocalDateTime.parse("2023-12-23T19:34:50.63"), null)
+        val secondOrder = OrderPersisted(2, listOf(randomProduct), FINISHED,  LocalDateTime.parse("2023-06-20T07:12:10.02"), null)
 
         // When
         every { orderRepository.findAll() } returns listOf(firstOrder, secondOrder)
@@ -66,7 +66,12 @@ private val jsonReader: JsonReader,
     fun `should save a order successfully`() {
         // Given
         val orderRequest = jsonReader.import("order_request_ok.json")
-        val orderPersisted = OrderPersisted.from(Order.from(jsonReader.importClass("order_request_ok.json", OrderRequest::class.java)))
+        val orderPersisted = OrderPersisted.from(
+            Order.from(
+                jsonReader.importClass("order_request_ok.json", OrderRequest::class.java),
+                null
+            )
+        )
 
         // When
         every { orderRepository.save(any()) } returns orderPersisted
@@ -84,6 +89,35 @@ private val jsonReader: JsonReader,
             .andExpect(jsonPath("$.products[0].name").value("Coke"))
             .andExpect(jsonPath("$.products[1].name").value("Pizza"))
     }
+
+    @Test
+    fun `should save a order with Cpf if customer choose to identify via Cpf`() {
+        // Given
+        val orderRequest = jsonReader.import("order_request_ok.json")
+        val orderPersisted = OrderPersisted.from(
+            Order.from(
+                jsonReader.importClass("order_request_ok.json", OrderRequest::class.java),
+                "910.933.630-37"
+            )
+        )
+
+        // When
+        every { orderRepository.save(any()) } returns orderPersisted
+        every { checkoutService.fakeCheckout() } returns true
+
+        mockMvc.perform(
+            post("/v1/orders?cpf=910.933.630-37")
+                .content(orderRequest)
+                .contentType(APPLICATION_JSON)
+        )
+            // Then
+            .andExpect(status().isCreated)
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(jsonPath("$.status").value("RECEIVED"))
+            .andExpect(jsonPath("$.products[0].name").value("Coke"))
+            .andExpect(jsonPath("$.products[1].name").value("Pizza"))
+    }
+
 
     @Test
     fun `should not save a order if payment is not confirmed`() {

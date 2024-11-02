@@ -22,7 +22,8 @@ data class OrderPersisted(
     var products: List<ProductPersisted> = emptyList(),
     @Enumerated(STRING)
     var status: OrderStatus,
-    var creationDate: LocalDateTime
+    var creationDate: LocalDateTime,
+    var customerCPF: String?
 ) {
     companion object {
         fun from(order: Order): OrderPersisted {
@@ -30,7 +31,8 @@ data class OrderPersisted(
                 id = null,
                 status = order.status,
                 products = order.products.map { ProductPersisted.from(it) },
-                creationDate = order.creationDate
+                creationDate = order.creationDate,
+                customerCPF = order.customerCpf
             )
         }
     }

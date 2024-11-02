@@ -40,10 +40,10 @@ class OrderController(
         ]
     )
     @PostMapping
-    fun createOrder(@RequestBody orderRequest: OrderRequest): ResponseEntity<Any> {
+    fun createOrder(@RequestBody orderRequest: OrderRequest, @RequestParam cpf: String?): ResponseEntity<Any> {
         val paymentConfirmed = checkoutService.fakeCheckout()
         if (paymentConfirmed) {
-            return orderService.createOrder(Order.from(orderRequest))
+            return orderService.createOrder(Order.from(orderRequest, cpf))
                 .let { status(HttpStatus.CREATED).body(it) }
         } else {
             throw ProductValidationException("There was a problem with payment and the order was not received")

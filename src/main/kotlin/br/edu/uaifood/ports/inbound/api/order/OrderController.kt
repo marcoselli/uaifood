@@ -3,7 +3,7 @@ package br.edu.uaifood.ports.inbound.api.order
 import br.edu.uaifood.adapters.CheckoutService
 import br.edu.uaifood.adapters.OrderService
 import br.edu.uaifood.domain.entities.Order
-import br.edu.uaifood.exception.ProductValidationException
+import br.edu.uaifood.exception.OrderPaymentException
 import br.edu.uaifood.ports.inbound.api.order.dto.OrderRequest
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
@@ -46,7 +46,7 @@ class OrderController(
             return orderService.createOrder(Order.from(orderRequest, cpf))
                 .let { status(HttpStatus.CREATED).body(it) }
         } else {
-            throw ProductValidationException("There was a problem with payment and the order was not received")
+            throw OrderPaymentException("There was a problem with payment and the order was not received")
         }
     }
 }

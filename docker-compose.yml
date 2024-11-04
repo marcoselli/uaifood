@@ -8,9 +8,6 @@ services:
       - MYSQL_USER=admin
       - MYSQL_PASSWORD=admin
     ports:
-<<<<<<< Updated upstream
-      - '3306:3306'
-=======
       - '3306:3306'
     networks:
       - uaifood_bridge_network
@@ -40,4 +37,4 @@ services:
 networks:
   uaifood_bridge_network:
     driver: bridge
->>>>>>> Stashed changes
+

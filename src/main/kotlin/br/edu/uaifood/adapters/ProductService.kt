@@ -7,4 +7,5 @@ interface ProductService {
     fun insertIntoMenu(product: Product): ProductResponse
     fun updateMenuProduct(productName: String, updatedProduct: Product): ProductResponse
     fun removeFromMenu(productName: String)
+    fun findProductsByCategory(category: String): List<ProductResponse>
 }

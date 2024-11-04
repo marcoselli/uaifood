@@ -1,8 +1,10 @@
 package br.edu.uaifood.ports.outbound.repository.product
 
 import br.edu.uaifood.domain.entities.Product
+import br.edu.uaifood.ports.outbound.repository.order.OrderPersisted
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
+import jakarta.persistence.ManyToMany
 import java.util.*
 
 @Entity(name = "product")
@@ -13,7 +15,9 @@ data class ProductPersisted(
     val description: String,
     val price: Double,
     val category: String,
-    val imageUrl: String
+    val imageUrl: String,
+    @ManyToMany(mappedBy = "products")
+    val orders: List<OrderPersisted> = emptyList()
 ) {
     companion object {
         fun from(newProduct: Product): ProductPersisted =

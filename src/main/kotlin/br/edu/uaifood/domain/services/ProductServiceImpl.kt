@@ -5,6 +5,7 @@ import br.edu.uaifood.domain.entities.Product
 import br.edu.uaifood.ports.inbound.api.product.dto.ProductResponse
 import br.edu.uaifood.ports.outbound.repository.product.ProductPersisted
 import br.edu.uaifood.adapters.ProductRepository
+import br.edu.uaifood.domain.entities.ProductCategory
 import br.edu.uaifood.exception.ProductNotFoundException
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
@@ -44,5 +45,13 @@ class ProductServiceImpl(
         productRepository.findByName(productName)
             ?.let { productRepository.deleteById(it.id) }
             ?.also { logger.info("Product $productName removed from menu") }
+    }
+
+    override fun findProductsByCategory(category: String): List<ProductResponse> {
+        logger.info("Getting products by category $category")
+        val products = productRepository.findByCategory(category)
+        return products.map { product ->
+            ProductResponse.from(product)
+        }
     }
 }

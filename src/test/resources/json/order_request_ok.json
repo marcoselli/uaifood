@@ -1,0 +1,18 @@
+{
+  "products": [
+    {
+      "name": "Coke",
+      "description": "Coca-cola 350ml",
+      "price": 10.00,
+      "category": "DRINK",
+      "image_url": "base-img-url.com"
+    },
+    {
+      "name": "Pizza",
+      "description": "pepperoni",
+      "price": 20.00,
+      "category": "SNACK",
+      "image_url": "pizza-pepperoni-img-url.com"
+    }
+  ]
+}

@@ -1,12 +1,6 @@
 package br.edu.uaifood.ports.inbound.api
 
-import br.edu.uaifood.adapters.CustomerService
-import br.edu.uaifood.domain.entities.Customer
-import br.edu.uaifood.ports.inbound.api.customer.dto.CustomerRequest
-import br.edu.uaifood.ports.inbound.api.customer.dto.CustomerResponse
-import br.edu.uaifood.ports.outbound.repository.customer.CustomerPersisted
-import io.mockk.every
-import io.mockk.impl.annotations.RelaxedMockK
+import br.edu.uaifood.util.JsonReader
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -15,40 +9,29 @@ import org.springframework.test.web.servlet.MockMvc
 
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 
 @AutoConfigureMockMvc
 @SpringBootTest
-class CustomerControllerTest @Autowired constructor(
-    val mockMvc: MockMvc,
+class CustomerControllerTest(
+    @Autowired
+    private val jsonReader: JsonReader,
+    @Autowired
+    private val mockMvc: MockMvc
 ) {
 
-    @RelaxedMockK
-    lateinit var customerService: CustomerService
-
     @Test
-    fun whenPostRequestCustomer_thenReturnsStatus200() {
-        val customerRequest = CustomerRequest(
-            name = "Name Surname",
-            cpf = "910.933.630-37",
-            email = "name.surname@gmail.com"
-        )
-
-        val newCustomer = Customer.from(customerRequest)
-        val customerPersisted = CustomerPersisted.from(newCustomer)
-
-        every { customerService.createCustomer(newCustomer) } returns CustomerResponse.from(customerPersisted)
-
+    fun `should save a customer successfully`() {
+        // Given
+        val customerRequest = jsonReader.import("customer_request_ok.json")
+        // When
         mockMvc.perform(
-            post("/v1/customers").content(
-                "{\n" +
-                        "   \"name\":\"Name Surname\",\n" +
-                        "   \"cpf\":\"910.933.630-37\",\n" +
-                        "   \"e-mail\":\"name.surname@gmail.com\"\n" +
-                        "}"
-            )
+            post("/v1/customers")
+                .content(customerRequest)
                 .contentType(MediaType.APPLICATION_JSON)
         )
+            // Then
             .andExpect(status().isCreated)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.id").value(1))
@@ -59,36 +42,62 @@ class CustomerControllerTest @Autowired constructor(
     }
 
     @Test
-    fun whenPostRequestCustomerWithInvalidCPf_thenReturnsStatus400() {
-
+    fun `should return bad request when cpf is invalid`() {
+        // Given
+        val customerRequest = jsonReader.import("customer_request_invalid_cpf.json")
+        // When
         mockMvc.perform(
-            post("/v1/customers").content(
-                "{\n" +
-                        "   \"name\":\"Name Surname\",\n" +
-                        "   \"cpf\":\"111.222.333-44\",\n" +
-                        "   \"e-mail\":\"name.surname@gmail.com\"\n" +
-                        "}"
-            )
+            post("/v1/customers")
+                .content(customerRequest)
                 .contentType(MediaType.APPLICATION_JSON)
         )
+            // Then
             .andExpect(status().isBadRequest)
-            .andExpect(content().string("Invalid CPF"))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.status_code").value(400))
+            .andExpect(jsonPath("$.message").value("Invalid CPF"))
     }
 
     @Test
-    fun whenPostRequestCustomerWithInvalidEmail_thenReturnsStatus400() {
+    fun `should return bad request when e-mail is invalid`() {
+        // Given
+        val customerRequest = jsonReader.import("customer_request_invalid_email.json")
+        // When
+        mockMvc.perform(
+            post("/v1/customers")
+                .content(customerRequest)
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            // Then
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.status_code").value(400))
+            .andExpect(jsonPath("$.message").value("Invalid e-mail"))
+    }
+
+    @Test
+    fun `should return not found when customer is not found`() {
 
         mockMvc.perform(
-            post("/v1/customers").content(
-                "{\n" +
-                        "   \"name\":\"Name Surname\",\n" +
-                        "   \"cpf\":\"910.933.630-37\",\n" +
-                        "   \"e-mail\":\"name.surnameinvalid.com\"\n" +
-                        "}"
-            )
+            get("/v1/customers?cpf=910.933.630-37")
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(status().isNotFound)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.status_code").value(404))
+            .andExpect(jsonPath("$.message").value("Customer for cpf 91093363037 not found"))
+    }
+
+    @Test
+    fun `should return bad request when try to find customer by invalid cpf`() {
+
+        mockMvc.perform(
+            get("/v1/customers?cpf=111.222.333-44")
                 .contentType(MediaType.APPLICATION_JSON)
         )
             .andExpect(status().isBadRequest)
-            .andExpect(content().string("Invalid e-mail"))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.status_code").value(400))
+            .andExpect(jsonPath("$.message").value("Invalid CPF"))
     }
 }

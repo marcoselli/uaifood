@@ -36,6 +36,25 @@ class ExceptionControllerAdvice {
         )
         return ResponseEntity(errorMessage, exception.statusCode)
     }
+    @ExceptionHandler
+    fun handleCustomerValidationException(exception:CustomerValidationException): ResponseEntity<ErrorMessageModel> {
+
+        val errorMessage = ErrorMessageModel(
+            exception.statusCode.value(),
+            exception.reason
+        )
+        return ResponseEntity(errorMessage, exception.statusCode)
+    }
+
+    @ExceptionHandler
+    fun handleCustomerNotFoundException(exception:CustomerNotFoundException): ResponseEntity<ErrorMessageModel> {
+
+        val errorMessage = ErrorMessageModel(
+            exception.statusCode.value(),
+            exception.reason
+        )
+        return ResponseEntity(errorMessage, exception.statusCode)
+    }
 
     @ExceptionHandler
     fun handleOrderPaymentException(exception: OrderPaymentException): ResponseEntity<ErrorMessageModel> {

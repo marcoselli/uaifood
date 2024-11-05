@@ -1,11 +1,10 @@
 FROM gradle:8.10.2-jdk21-alpine AS build
 WORKDIR /app
 
-COPY build.gradle.kts settings.gradle.kts gradlew ./
-COPY gradle gradle
+COPY build.gradle.kts settings.gradle.kts ./
 COPY src src
 
-RUN ./gradlew clean build
+RUN gradle clean build
 
 FROM openjdk:21-slim
 WORKDIR /app

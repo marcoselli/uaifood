@@ -19,7 +19,7 @@ services:
       timeout: 5s
       retries: 5
 
-# For local test comment the service bellow
+# For local tests to debug purposes comment the service bellow
   uaifood-app:
     image: 'uaifood:1.0.0'
     container_name: uaifood_app
@@ -39,3 +39,4 @@ services:
 networks:
   uaifood_bridge_network:
     driver: bridge
+

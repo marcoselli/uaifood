@@ -2,10 +2,13 @@ package br.edu.uaifood.ports.inbound.api.product
 
 import br.edu.uaifood.domain.entities.Product
 import br.edu.uaifood.adapters.ProductService
+import br.edu.uaifood.exception.ErrorMessageModel
 import br.edu.uaifood.exception.InvalidUpdateRequestException
 import br.edu.uaifood.ports.inbound.api.product.dto.ProductResponse
 import br.edu.uaifood.ports.inbound.api.product.dto.UpsertProductRequest
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.media.Content
+import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import org.slf4j.LoggerFactory
@@ -24,8 +27,8 @@ class ProductController(
     @Operation(summary = "Insert new product into menu", description = "Returns 201 if successful")
     @ApiResponses(
         value = [
-            ApiResponse(responseCode = "201", description = "Product inserted successfully"),
-            ApiResponse(responseCode = "400", description = "Error inserting Product"),
+            ApiResponse(responseCode = "201", description = "Product inserted successfully", content = [Content(schema = Schema(implementation = ProductResponse::class))]),
+            ApiResponse(responseCode = "400", description = "Error inserting Product", content = [Content(schema = Schema(implementation = ErrorMessageModel::class))]),
         ]
     )
     @PostMapping
@@ -37,8 +40,8 @@ class ProductController(
     @Operation(summary = "Update product from menu", description = "Returns 200 if successful")
     @ApiResponses(
         value = [
-            ApiResponse(responseCode = "200", description = "Product updated successfully"),
-            ApiResponse(responseCode = "400", description = "Error updating Product"),
+            ApiResponse(responseCode = "200", description = "Product updated successfully", content = [Content(schema = Schema(implementation = ProductResponse::class))]),
+            ApiResponse(responseCode = "400", description = "Error updating Product", content = [Content(schema = Schema(implementation = ErrorMessageModel::class))]),
         ]
     )
     @PutMapping("/{product_name}")

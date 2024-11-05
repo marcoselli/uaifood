@@ -1,0 +1,74 @@
+package br.edu.uaifood.exception
+
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.ControllerAdvice
+import org.springframework.web.bind.annotation.ExceptionHandler
+
+@ControllerAdvice
+class ExceptionControllerAdvice {
+
+    @ExceptionHandler
+    fun handleProductValidationException(exception: ProductValidationException): ResponseEntity<ErrorMessageModel> {
+
+        val errorMessage = ErrorMessageModel(
+            exception.statusCode.value(),
+            exception.reason
+        )
+        return ResponseEntity(errorMessage, exception.statusCode)
+    }
+
+    @ExceptionHandler
+    fun handleProductNotFoundException(exception: ProductNotFoundException): ResponseEntity<ErrorMessageModel> {
+
+        val errorMessage = ErrorMessageModel(
+            exception.statusCode.value(),
+            exception.reason
+        )
+        return ResponseEntity(errorMessage, exception.statusCode)
+    }
+
+    @ExceptionHandler
+    fun handleInvalidUpdateRequestException(exception: InvalidUpdateRequestException): ResponseEntity<ErrorMessageModel> {
+
+        val errorMessage = ErrorMessageModel(
+            exception.statusCode.value(),
+            exception.reason
+        )
+        return ResponseEntity(errorMessage, exception.statusCode)
+    }
+    @ExceptionHandler
+    fun handleCustomerValidationException(exception:CustomerValidationException): ResponseEntity<ErrorMessageModel> {
+
+        val errorMessage = ErrorMessageModel(
+            exception.statusCode.value(),
+            exception.reason
+        )
+        return ResponseEntity(errorMessage, exception.statusCode)
+    }
+
+    @ExceptionHandler
+    fun handleCustomerNotFoundException(exception:CustomerNotFoundException): ResponseEntity<ErrorMessageModel> {
+
+        val errorMessage = ErrorMessageModel(
+            exception.statusCode.value(),
+            exception.reason
+        )
+        return ResponseEntity(errorMessage, exception.statusCode)
+    }
+
+    @ExceptionHandler
+    fun handleOrderPaymentException(exception: OrderPaymentException): ResponseEntity<ErrorMessageModel> {
+
+        val errorMessage = ErrorMessageModel(
+            exception.statusCode.value(),
+            exception.reason
+        )
+        return ResponseEntity(errorMessage, exception.statusCode)
+    }
+
+}
+
+class ErrorMessageModel(
+    var statusCode: Int,
+    var message: String? = null
+)

@@ -16,7 +16,12 @@ MIRO - https://miro.com/app/board/uXjVLKN9J9Y=/
 
 ## 🚀 Running uaifood
 
-Be sure that you have installed Docker and Docker Compose. After that, run the commands at the root path of the project
+Be sure that you have installed:
+- Docker
+- Docker Compose (v2.1 or higher)
+
+After that, run the commands at the root path of the project:
+
 1. Create a local image
 
 ```

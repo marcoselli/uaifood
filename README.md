@@ -12,7 +12,7 @@
 
 ## 📝 Documentation
 
-MIRO - https://miro.com/app/board/uXjVLKN9J9Y=/
+[UaiFood Miro](https://miro.com/app/board/uXjVLKN9J9Y=/)
 
 ## 🚀 Running uaifood
 

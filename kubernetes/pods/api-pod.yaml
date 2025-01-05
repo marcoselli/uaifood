@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: uaifood-api-pod
+  labels:
+    app: uaifood-app
+spec:
+  containers:
+    - name: uaifood-app
+      image: uaifood:1.0.0
+      ports:
+        - containerPort: 8080
+      env:
+        - name: MYSQL_CONN_URL
+          valueFrom:
+            configMapKeyRef:
+              name: db-config
+              key: MYSQL_CONN_URL
+

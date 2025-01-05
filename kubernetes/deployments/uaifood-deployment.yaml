@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: uaifood-deployment
+  labels:
+    app: uaifood-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: uaifood-deployment
+  template:
+    metadata:
+      labels:
+        app: uaifood-deployment
+    spec:
+      containers:
+        - name: uaifood-api-container
+          image: 'uaifood:1.0.0'
+          ports:
+            - containerPort: 8080

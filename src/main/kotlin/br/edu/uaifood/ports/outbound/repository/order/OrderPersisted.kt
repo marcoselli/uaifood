@@ -12,8 +12,8 @@ import java.time.LocalDateTime
 data class OrderPersisted(
     @Id
     @GeneratedValue(strategy = IDENTITY)
-    var id: Long?,
-    @ManyToMany
+    var id: Long?, //@todo see if it will be also an UUDI, as the id of ProductPersisted
+    @ManyToMany(cascade = [CascadeType.MERGE])
     @JoinTable(
         name = "food_order_product",
         joinColumns = [JoinColumn(name = "food_order_id")],

@@ -5,6 +5,7 @@ import br.edu.uaifood.domain.entities.Customer
 import br.edu.uaifood.exception.ErrorMessageModel
 import br.edu.uaifood.ports.inbound.api.customer.dto.CustomerRequest
 import br.edu.uaifood.ports.inbound.api.customer.dto.CustomerResponse
+import br.edu.uaifood.usecases.CreateCustomerUseCase
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
@@ -16,7 +17,10 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/v1/customers")
-class CustomerController(var service: CustomerService) {
+class CustomerController(
+    var service: CustomerService,
+    var createCustomerUseCase: CreateCustomerUseCase
+) {
 
     @Operation(summary = "Creates a new customer", description = "Returns 201 if successful")
     @ApiResponses(
@@ -27,7 +31,7 @@ class CustomerController(var service: CustomerService) {
     )
     @PostMapping
     fun createCustomer(@RequestBody customerRequest: CustomerRequest) =
-        service.createCustomer(Customer.from(customerRequest))
+        createCustomerUseCase.execute(Customer.from(customerRequest))
             .let { status(CREATED).body(it) }
 
     @Operation(summary = "Get a customer by Cpf", description = "Returns 200 if successful")

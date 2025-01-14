@@ -1,6 +1,6 @@
 package br.edu.uaifood.domain.services
 
-import br.edu.uaifood.adapters.OrderRepository
+import br.edu.uaifood.adapters.repositories.OrderRepository
 import br.edu.uaifood.domain.entities.OrderStatus.*
 import br.edu.uaifood.ports.outbound.repository.order.OrderPersisted
 import io.mockk.mockk
@@ -10,7 +10,6 @@ import io.github.glytching.junit.extension.random.Random
 import io.github.glytching.junit.extension.random.RandomBeansExtension
 import io.mockk.every
 import org.junit.jupiter.api.extension.ExtendWith
-import java.time.LocalDateTime
 import java.time.LocalDateTime.parse
 import kotlin.test.Test
 

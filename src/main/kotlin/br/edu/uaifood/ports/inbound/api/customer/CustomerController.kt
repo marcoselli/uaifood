@@ -1,11 +1,11 @@
 package br.edu.uaifood.ports.inbound.api.customer
 
-import br.edu.uaifood.adapters.CustomerService
 import br.edu.uaifood.domain.entities.Customer
 import br.edu.uaifood.exception.ErrorMessageModel
 import br.edu.uaifood.ports.inbound.api.customer.dto.CustomerRequest
 import br.edu.uaifood.ports.inbound.api.customer.dto.CustomerResponse
-import br.edu.uaifood.usecases.CreateCustomerUseCase
+import br.edu.uaifood.adapters.usecases.CreateCustomerUseCase
+import br.edu.uaifood.adapters.usecases.FindCustomerByCpfUseCase
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/v1/customers")
 class CustomerController(
-    var service: CustomerService,
-    var createCustomerUseCase: CreateCustomerUseCase
+    private val createCustomerUseCase: CreateCustomerUseCase,
+    private val findCustomerByCpfUseCase: FindCustomerByCpfUseCase
 ) {
 
     @Operation(summary = "Creates a new customer", description = "Returns 201 if successful")
@@ -43,6 +43,6 @@ class CustomerController(
     )
     @GetMapping
     fun findCustomerByCpf(@RequestParam cpf: String) =
-        service.findCustomerByCpf(Customer.validateCpf(cpf))
+        findCustomerByCpfUseCase.execute(Customer.validateCpf(cpf))
             .let { status(OK).body(it) }
 }

@@ -1,8 +1,7 @@
 package br.edu.uaifood.ports.inbound.api
 
-import br.edu.uaifood.adapters.ProductRepository
+import br.edu.uaifood.adapters.repositories.ProductRepository
 import br.edu.uaifood.domain.entities.Product
-import br.edu.uaifood.ports.inbound.api.product.dto.UpsertProductRequest
 import br.edu.uaifood.ports.outbound.repository.product.ProductPersisted
 import br.edu.uaifood.util.JsonReader
 import com.ninjasquad.springmockk.MockkBean

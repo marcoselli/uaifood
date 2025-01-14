@@ -1,5 +1,6 @@
 package br.edu.uaifood.adapters
 
+import br.edu.uaifood.adapters.repositories.OrderRepository
 import br.edu.uaifood.domain.entities.Order
 import br.edu.uaifood.domain.entities.OrderStatus.READY
 import br.edu.uaifood.domain.entities.OrderStatus.RECEIVED

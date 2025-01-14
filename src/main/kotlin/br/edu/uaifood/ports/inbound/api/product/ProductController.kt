@@ -2,6 +2,10 @@ package br.edu.uaifood.ports.inbound.api.product
 
 import br.edu.uaifood.domain.entities.Product
 import br.edu.uaifood.adapters.ProductService
+import br.edu.uaifood.adapters.usecases.FindProductsByCategoryUseCase
+import br.edu.uaifood.adapters.usecases.InsertProductIntoMenuUseCase
+import br.edu.uaifood.adapters.usecases.RemoveProductFromMenuUseCase
+import br.edu.uaifood.adapters.usecases.UpdateMenuProductUseCase
 import br.edu.uaifood.exception.ErrorMessageModel
 import br.edu.uaifood.exception.InvalidUpdateRequestException
 import br.edu.uaifood.ports.inbound.api.product.dto.ProductResponse
@@ -19,7 +23,10 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/v1/products")
 class ProductController(
-    val productService: ProductService
+    private val insertProductIntoMenuUseCase: InsertProductIntoMenuUseCase,
+    private val updateMenuProductUseCase: UpdateMenuProductUseCase,
+    private val removeProductFromMenuUseCase: RemoveProductFromMenuUseCase,
+    private val findProductsByCategoryUseCase: FindProductsByCategoryUseCase
 ) {
 
     private val logger = LoggerFactory.getLogger(ProductController::class.java)
@@ -34,7 +41,7 @@ class ProductController(
     @PostMapping
     fun insertIntoMenu(@RequestBody upsertProductRequest: UpsertProductRequest) =
         logger.info("Inserting product ${upsertProductRequest.name} into menu")
-            .let { productService.insertIntoMenu(Product.from(upsertProductRequest)) }
+            .let { insertProductIntoMenuUseCase.execute(Product.from(upsertProductRequest)) }
             .let { ResponseEntity.status(HttpStatus.CREATED).body(it) }
 
     @Operation(summary = "Update product from menu", description = "Returns 200 if successful")
@@ -52,7 +59,7 @@ class ProductController(
             logger.info("Fail to update product $productName - Path parameter and request body names must be equal")
             throw InvalidUpdateRequestException()
         }
-        return productService.updateMenuProduct(productName, Product.from(upsertProductRequest))
+        return updateMenuProductUseCase.execute(productName, Product.from(upsertProductRequest))
             .let { ResponseEntity.status(HttpStatus.OK).body(it) }
     }
 
@@ -65,7 +72,7 @@ class ProductController(
     )
     @DeleteMapping("/{product_name}")
     fun removeFromMenu(@PathVariable("product_name") productName: String): ResponseEntity<Void> =
-        productService.removeFromMenu(productName)
+        removeProductFromMenuUseCase.execute(productName)
             .let { ResponseEntity.noContent().build() }
 
     @Operation(summary = "Retrieve products by category", description = "Product List")
@@ -77,7 +84,7 @@ class ProductController(
     )
     @GetMapping
     fun getProductsByCategory(@RequestParam category: String): ResponseEntity<List<ProductResponse>> =
-        productService.findProductsByCategory(category)
+        findProductsByCategoryUseCase.execute(category)
             .let { products ->
                 if (products.isEmpty()) {
                     ResponseEntity.noContent().build()

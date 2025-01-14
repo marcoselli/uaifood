@@ -1,7 +1,7 @@
 package br.edu.uaifood.ports.inbound.api
 
 import br.edu.uaifood.adapters.CheckoutService
-import br.edu.uaifood.adapters.OrderRepository
+import br.edu.uaifood.adapters.repositories.OrderRepository
 import br.edu.uaifood.domain.entities.Order
 import br.edu.uaifood.domain.entities.OrderStatus.*
 import br.edu.uaifood.ports.inbound.api.order.dto.OrderRequest

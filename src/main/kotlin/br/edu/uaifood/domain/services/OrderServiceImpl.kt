@@ -2,7 +2,7 @@ package br.edu.uaifood.domain.services
 
 import br.edu.uaifood.adapters.repositories.OrderRepository
 import br.edu.uaifood.adapters.OrderService
-import br.edu.uaifood.adapters.repositories.ProductRepository
+import br.edu.uaifood.adapters.usecases.FindProductsByIdsUseCase
 import br.edu.uaifood.domain.entities.Order
 import br.edu.uaifood.ports.inbound.api.order.dto.OrderResponse
 import br.edu.uaifood.ports.outbound.repository.order.OrderPersisted
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service
 @Service
 class OrderServiceImpl(
     var orderRepository: OrderRepository,
-    var productRepository: ProductRepository //@todo all logic using it should be in some kind of "ProductServer"
+    var findProductsByIdsUseCase: FindProductsByIdsUseCase
 ) : OrderService {
 
     private val logger = LoggerFactory.getLogger(this::class.java)
@@ -27,14 +27,10 @@ class OrderServiceImpl(
     override fun createOrder(order: Order): OrderResponse {
         logger.info("Creating order")
 
-        val managedProducts = order.products.map { product ->
-            productRepository.findById(product.id ?: throw IllegalArgumentException("Product ID is missing"))
-                .orElseThrow { IllegalArgumentException("Product not found: ${product.id}") }
-        }
+        val managedProducts = findProductsByIdsUseCase.execute(order.products)
         val orderPersisted = OrderPersisted.from(order).apply { products = managedProducts }
 
         return runCatching {
-//            orderRepository.save(OrderPersisted.from(order))
             orderRepository.save(orderPersisted)
                 .let { OrderResponse.from(it) }
         }.onSuccess { logger.info("Order created successfully")

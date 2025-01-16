@@ -6,7 +6,9 @@ import br.edu.uaifood.domain.entities.Order
 import br.edu.uaifood.ports.inbound.api.order.dto.OrderResponse
 import br.edu.uaifood.ports.outbound.repository.order.OrderPersisted
 import org.slf4j.LoggerFactory
+import org.springframework.stereotype.Component
 
+@Component
 class CreateOrderUseCaseImpl(var repository: OrderRepository): CreateOrderUseCase {
     private val logger = LoggerFactory.getLogger(this::class.java)
     override fun execute(order: Order): OrderResponse {

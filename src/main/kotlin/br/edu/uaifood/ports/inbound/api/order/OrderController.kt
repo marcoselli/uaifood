@@ -1,7 +1,6 @@
 package br.edu.uaifood.ports.inbound.api.order
 
 import br.edu.uaifood.adapters.CheckoutService
-import br.edu.uaifood.adapters.OrderService
 import br.edu.uaifood.adapters.usecases.CreateOrderUseCase
 import br.edu.uaifood.adapters.usecases.FindAllOrdersUseCase
 import br.edu.uaifood.domain.entities.Order

@@ -1,7 +1,8 @@
 package br.edu.uaifood.ports.inbound.api.order
 
 import br.edu.uaifood.adapters.CheckoutService
-import br.edu.uaifood.adapters.OrderService
+import br.edu.uaifood.adapters.usecases.CreateOrderUseCase
+import br.edu.uaifood.adapters.usecases.FindAllOrdersUseCase
 import br.edu.uaifood.domain.entities.Order
 import br.edu.uaifood.exception.ErrorMessageModel
 import br.edu.uaifood.exception.OrderPaymentException
@@ -22,7 +23,8 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/v1/orders")
 class OrderController(
-    var orderService: OrderService,
+    var createOrderUseCase: CreateOrderUseCase,
+    var findAllOrdersUseCase: FindAllOrdersUseCase,
     var checkoutService: CheckoutService
 ) {
 
@@ -34,7 +36,7 @@ class OrderController(
     )
     @GetMapping
     fun findOrders() =
-        orderService.findAllOrders()
+        findAllOrdersUseCase.execute()
             .let { status(OK).body(it) }
 
     @Operation(summary = "Create a order", description = "Returns 201 if successful")
@@ -48,7 +50,7 @@ class OrderController(
     fun createOrder(@RequestBody orderRequest: OrderRequest, @RequestParam cpf: String?): ResponseEntity<Any> {
         val paymentConfirmed = checkoutService.fakeCheckout()
         if (paymentConfirmed) {
-            return orderService.createOrder(Order.from(orderRequest, cpf))
+            return createOrderUseCase.execute(Order.from(orderRequest, cpf))
                 .let { status(HttpStatus.CREATED).body(it) }
         } else {
             throw OrderPaymentException("There was a problem with payment and the order was not received")

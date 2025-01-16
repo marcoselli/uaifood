@@ -1,30 +1,22 @@
-package br.edu.uaifood.domain.services
+package br.edu.uaifood.usecases
 
 import br.edu.uaifood.adapters.repositories.OrderRepository
+import br.edu.uaifood.adapters.usecases.CreateOrderUseCase
 import br.edu.uaifood.adapters.OrderService
 import br.edu.uaifood.adapters.usecases.FindProductsByIdsUseCase
 import br.edu.uaifood.domain.entities.Order
 import br.edu.uaifood.ports.inbound.api.order.dto.OrderResponse
 import br.edu.uaifood.ports.outbound.repository.order.OrderPersisted
 import org.slf4j.LoggerFactory
-import org.springframework.stereotype.Service
+import org.springframework.stereotype.Component
 
-@Service
-class OrderServiceImpl(
+@Component
+class CreateOrderUseCaseImpl(
     var orderRepository: OrderRepository,
     var findProductsByIdsUseCase: FindProductsByIdsUseCase
-) : OrderService {
-
+): CreateOrderUseCase {
     private val logger = LoggerFactory.getLogger(this::class.java)
-
-    override fun findAllOrders(): List<OrderResponse> {        logger.info("Getting order list")
-        return runCatching {
-            orderRepository.findAll().map { OrderResponse.from(it) }
-        }.onFailure { logger.info("Fail to find orders")
-        }.getOrThrow()
-    }
-
-    override fun createOrder(order: Order): OrderResponse {
+    override fun execute(order: Order): OrderResponse {
         logger.info("Creating order")
 
         val managedProducts = findProductsByIdsUseCase.execute(order.products)

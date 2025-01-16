@@ -22,7 +22,7 @@ class Order(
         fun from(orderPersisted: OrderPersisted): Order =
             Order(
                 products = orderPersisted.products.map { Product.from(it) },
-                creationDate = LocalDateTime.now(),
+                creationDate = orderPersisted.creationDate,
                 status = orderPersisted.status,
                 customerCpf = orderPersisted.customerCPF
             )

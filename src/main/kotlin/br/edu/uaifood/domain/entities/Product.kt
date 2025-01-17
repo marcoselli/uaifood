@@ -3,8 +3,10 @@ package br.edu.uaifood.domain.entities
 import br.edu.uaifood.exception.ProductValidationException
 import br.edu.uaifood.ports.inbound.api.product.dto.UpsertProductRequest
 import br.edu.uaifood.ports.outbound.repository.product.ProductPersisted
+import java.util.*
 
 data class Product(
+    val id: UUID? = null,
     val name: String,
     val description: String,
     val price: Double,
@@ -14,6 +16,7 @@ data class Product(
     companion object {
         fun from(upsertProductRequest: UpsertProductRequest) =
             Product(
+                id = upsertProductRequest.id,
                 name = upsertProductRequest.name,
                 description = upsertProductRequest.description,
                 price = validatePrice(upsertProductRequest.price),

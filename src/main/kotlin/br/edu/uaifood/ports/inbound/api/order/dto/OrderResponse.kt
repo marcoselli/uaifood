@@ -2,12 +2,11 @@ package br.edu.uaifood.ports.inbound.api.order.dto
 
 import br.edu.uaifood.domain.entities.Order
 import br.edu.uaifood.domain.entities.OrderStatus
-import br.edu.uaifood.domain.entities.Product
 import br.edu.uaifood.ports.inbound.api.product.dto.ProductResponse
 import br.edu.uaifood.ports.outbound.repository.order.OrderPersisted
 
 data class OrderResponse(
-    var orderId: Long?,
+    var orderId: Long? = null,
     var products: List<ProductResponse> = emptyList(),
     var status: OrderStatus,
     var creationDate: String

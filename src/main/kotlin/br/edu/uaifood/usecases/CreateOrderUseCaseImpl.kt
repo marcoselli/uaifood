@@ -2,7 +2,6 @@ package br.edu.uaifood.usecases
 
 import br.edu.uaifood.adapters.repositories.OrderRepository
 import br.edu.uaifood.adapters.usecases.CreateOrderUseCase
-import br.edu.uaifood.adapters.OrderService
 import br.edu.uaifood.adapters.usecases.FindProductsByIdsUseCase
 import br.edu.uaifood.domain.entities.Order
 import br.edu.uaifood.ports.inbound.api.order.dto.OrderResponse

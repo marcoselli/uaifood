@@ -5,7 +5,7 @@ import br.edu.uaifood.ports.outbound.repository.product.ProductPersisted
 import java.util.*
 
 data class ProductResponse(
-    val id: UUID,
+    val id: UUID? = null,
     val name: String,
     val description: String,
     val price: Double,

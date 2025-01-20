@@ -5,6 +5,7 @@ import br.edu.uaifood.ports.outbound.repository.order.OrderPersisted
 import java.time.LocalDateTime
 
 class Order(
+    var id: Long? = null,
     var products: List<Product> = emptyList(),
     var status: OrderStatus,
     var creationDate: LocalDateTime,
@@ -21,6 +22,7 @@ class Order(
 
         fun from(orderPersisted: OrderPersisted): Order =
             Order(
+                id = orderPersisted.id,
                 products = orderPersisted.products.map { Product.from(it) },
                 creationDate = orderPersisted.creationDate,
                 status = orderPersisted.status,

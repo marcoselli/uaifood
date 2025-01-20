@@ -3,6 +3,7 @@ package br.edu.uaifood.ports.inbound.api.order
 import br.edu.uaifood.adapters.CheckoutService
 import br.edu.uaifood.adapters.usecases.CreateOrderUseCase
 import br.edu.uaifood.adapters.usecases.FindAllOrdersUseCase
+import br.edu.uaifood.adapters.usecases.FindOrderByIdUserCase
 import br.edu.uaifood.domain.entities.Order
 import br.edu.uaifood.exception.ErrorMessageModel
 import br.edu.uaifood.exception.OrderPaymentException
@@ -25,7 +26,8 @@ import org.springframework.web.bind.annotation.*
 class OrderController(
     var createOrderUseCase: CreateOrderUseCase,
     var findAllOrdersUseCase: FindAllOrdersUseCase,
-    var checkoutService: CheckoutService
+    var checkoutService: CheckoutService,
+    var findOrderByIdUseCase: FindOrderByIdUserCase
 ) {
 
     @Operation(summary = "Get a list of orders", description = "Returns 200 if successful")
@@ -56,4 +58,17 @@ class OrderController(
             throw OrderPaymentException("There was a problem with payment and the order was not received")
         }
     }
+
+    @Operation(summary = "Get the status of an order", description = "Returns 200 if successful")
+    @ApiResponses(
+        value = [
+            ApiResponse(responseCode = "200", description = "Order status", content = [Content(schema = Schema(implementation = String::class))]),
+            ApiResponse(responseCode = "404", description = "Order not found", content = [Content(schema = Schema(implementation = ErrorMessageModel::class))]),
+        ]
+    )
+    @GetMapping("/{orderId}/status")
+    fun getStatus(@PathVariable orderId: Long) =
+        findOrderByIdUseCase.execute(orderId)
+            .let { status(OK).body(it) }
+
 }

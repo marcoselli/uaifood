@@ -19,7 +19,7 @@ class FindOrderByIdUseCaseImpl(
         logger.info("Finding order with ID: $orderId")
         return try {
             val orderPersisted = repository.findById(orderId)
-                .orElseThrow { OrderNotFoundException("Order with ID $orderId not found") }
+                .orElseThrow { OrderNotFoundException(orderId) }
             val order = Order.from(orderPersisted)
             OrderStatusResponse(order.id, order.status)
         } catch (ex: Exception) {

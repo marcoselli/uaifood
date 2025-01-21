@@ -24,7 +24,9 @@ class InsertProductIntoMenuUseCaseImpl(
             productRepository.save(ProductPersisted.from(product))
                 .let { ProductResponse.from(it) }
         }.onSuccess { logger.info("Product ${product.name} inserted into menu successfully")
-        }.onFailure { logger.info("Fail to insert product ${product.name}: ${it.message}")
+        }.onFailure {
+            logger.info("Fail to insert product ${product.name}: ${it.message}")
+            throw it
         }.getOrThrow()
     }
 }

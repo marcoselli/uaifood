@@ -30,9 +30,9 @@ data class OrderPersisted(
     var payment: PaymentPersisted? = null // Relacionamento one-to-one com pagamento
 ) {
     companion object {
-        fun from(order: Order): OrderPersisted {
+        fun from(order: Order, orderId: Long? = null): OrderPersisted {
             return OrderPersisted(
-                id = null,
+                id = orderId,
                 status = order.status,
                 products = order.products.map { ProductPersisted.from(it) },
                 creationDate = order.creationDate,

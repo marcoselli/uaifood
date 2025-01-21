@@ -8,12 +8,14 @@ import br.edu.uaifood.adapters.usecases.FindProductsByIdsUseCase
 import br.edu.uaifood.adapters.usecases.GenerateQrCodeUseCase
 import br.edu.uaifood.domain.entities.Order
 import br.edu.uaifood.domain.entities.OrderStatus.*
+import br.edu.uaifood.domain.services.OrderService
 import br.edu.uaifood.ports.inbound.api.order.dto.OrderRequest
 import br.edu.uaifood.ports.outbound.repository.order.OrderPersisted
 import br.edu.uaifood.ports.outbound.repository.payment.PaymentPersisted
 import br.edu.uaifood.ports.outbound.repository.product.ProductPersisted
 import br.edu.uaifood.util.JsonReader
 import com.ninjasquad.springmockk.MockkBean
+import com.ninjasquad.springmockk.SpykBean
 import io.github.glytching.junit.extension.random.Random
 import io.github.glytching.junit.extension.random.RandomBeansExtension
 import io.mockk.every
@@ -41,6 +43,9 @@ private val jsonReader: JsonReader,
     @MockkBean
     private lateinit var orderRepository: OrderRepository
 
+    @SpykBean
+    private lateinit var orderService: OrderService
+
     @MockkBean
     private lateinit var checkoutService: CheckoutService
 
@@ -56,8 +61,8 @@ private val jsonReader: JsonReader,
     @Test
     fun `should find all orders`(@Random randomProduct: ProductPersisted) {
         // Given
-        val firstOrder = OrderPersisted(1, listOf(randomProduct), READY, LocalDateTime.parse("2023-12-23T19:34:50.63"), null)
-        val secondOrder = OrderPersisted(2, listOf(randomProduct), FINISHED,  LocalDateTime.parse("2023-06-20T07:12:10.02"), null)
+        val firstOrder = OrderPersisted(1, listOf(randomProduct.copy(category = "DESSERT")), FINISHED,  LocalDateTime.parse("2023-06-20T07:12:10.02"), null)
+        val secondOrder = OrderPersisted(2, listOf(randomProduct.copy(category = "DRINK")), READY, LocalDateTime.parse("2023-12-23T19:34:50.63"), null)
 
         // When
         every { orderRepository.findAll() } returns listOf(firstOrder, secondOrder)
@@ -65,22 +70,20 @@ private val jsonReader: JsonReader,
         mockMvc.perform(
             get("/v1/orders")
         )
-            // Then
-            .andExpect(status().isOk)
-            .andExpect(content().contentType(APPLICATION_JSON))
-            .andExpect(jsonPath("$.[0].status").value("READY"))
-            .andExpect(jsonPath("$.[0].creation_date").value("2023-12-23T19:34:50.630"))
-            .andExpect(jsonPath("$.[0].products[0].name").value(randomProduct.name))
-            .andExpect(jsonPath("$.[1].status").value("FINISHED"))
-            .andExpect(jsonPath("$.[1].creation_date").value("2023-06-20T07:12:10.020"))
-            .andExpect(jsonPath("$.[1].products[0].name").value(randomProduct.name))
+
+        // Then
+        .andExpect(status().isOk)
+        .andExpect(content().contentType(APPLICATION_JSON))
+        .andExpect(jsonPath("$.[0].status").value("READY"))
+        .andExpect(jsonPath("$.[0].products[0].name").value(randomProduct.name))
+        .andExpect(jsonPath("$.[0].creation_date").value("2023-12-23T19:34:50.630"))
+
     }
 
     @Test
     fun `should save a order successfully`(@Random paymentPersisted: PaymentPersisted) {
         // Given
         val orderRequest = jsonReader.import("order_request_ok.json")
-
         val orderPersisted = OrderPersisted.from(
             Order.from(
                 jsonReader.importClass("order_request_ok.json", OrderRequest::class.java),

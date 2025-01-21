@@ -22,7 +22,9 @@ class FindAllOrdersUseCaseImpl(
             val allOrders = repository.findAll().map { Order.from(it) }
             val allOrdersSorted = service.retrieveOrdersSortedByPriority(allOrders)
             allOrdersSorted
-        }.onFailure { logger.info("Fail to find orders - ${it.message}")
+        }.onFailure {
+            logger.info("Fail to find orders - ${it.message}")
+            throw it
         }.getOrThrow()
     }
 }

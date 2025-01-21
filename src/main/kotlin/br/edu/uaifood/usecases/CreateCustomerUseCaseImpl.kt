@@ -19,7 +19,9 @@ class CreateCustomerUseCaseImpl(private val repository: CustomerRepository): Cre
             repository.save(CustomerPersisted.from(customer))
                 .let { CustomerResponse.from(it) }
         }.onSuccess { logger.info("Customer ${customer.name} created successfully")
-        }.onFailure { logger.info("Fail to create Customer ${customer.name}: ${it.message}")
+        }.onFailure {
+            logger.info("Fail to create Customer ${customer.name}: ${it.message}")
+            throw it
         }.getOrThrow()
     }
 }

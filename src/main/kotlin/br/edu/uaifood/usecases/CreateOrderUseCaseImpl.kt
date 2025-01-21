@@ -17,7 +17,9 @@ class CreateOrderUseCaseImpl(var repository: OrderRepository): CreateOrderUseCas
             repository.save(OrderPersisted.from(order))
                 .let { OrderResponse.from(it) }
         }.onSuccess { logger.info("Order created successfully")
-        }.onFailure { logger.info("Fail to create order: ${it.message}")
+        }.onFailure {
+            logger.info("Fail to create order: ${it.message}")
+            throw  it
         }.getOrThrow()
     }
 }

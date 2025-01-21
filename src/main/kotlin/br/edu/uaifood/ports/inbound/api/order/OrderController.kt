@@ -47,7 +47,7 @@ class OrderController(
         ]
     )
     @PostMapping
-    fun createOrder(@RequestBody orderRequest: OrderRequest, @RequestParam cpf: String?): ResponseEntity<Any> {
+    fun createOrder(@RequestBody orderRequest: OrderRequest, @RequestParam cpf: String?): ResponseEntity<OrderResponse> {
         val paymentConfirmed = checkoutService.fakeCheckout()
         if (paymentConfirmed) {
             return createOrderUseCase.execute(Order.from(orderRequest, cpf))
@@ -55,5 +55,10 @@ class OrderController(
         } else {
             throw OrderPaymentException("There was a problem with payment and the order was not received")
         }
+    }
+
+    @PatchMapping("/{id}")
+    fun updateOrderStatus(@PathVariable id: String): ResponseEntity<Void> {
+        return status(OK).build()
     }
 }

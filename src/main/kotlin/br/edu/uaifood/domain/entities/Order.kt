@@ -14,9 +14,9 @@ class Order(
 
     fun nextStatus() {
         when (status) {
-            OrderStatus.READY -> this.status = OrderStatus.IN_PREPARATION
+            OrderStatus.RECEIVED -> this.status = OrderStatus.IN_PREPARATION
             OrderStatus.IN_PREPARATION -> this.status = OrderStatus.RECEIVED
-            OrderStatus.RECEIVED -> this.status = OrderStatus.FINISHED
+            OrderStatus.READY -> this.status = OrderStatus.FINISHED
             OrderStatus.FINISHED -> throw OrderAlreadyFinishedException()
         }
     }

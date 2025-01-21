@@ -5,11 +5,12 @@ import br.edu.uaifood.ports.inbound.api.order.dto.OrderRequest
 import br.edu.uaifood.ports.outbound.repository.order.OrderPersisted
 import java.time.LocalDateTime
 
-class Order(
-    var products: List<Product> = emptyList(),
+data class Order(
+    val id: Long? = null,
+    val products: List<Product> = emptyList(),
     var status: OrderStatus,
-    var creationDate: LocalDateTime,
-    var customerCpf: String?
+    val creationDate: LocalDateTime,
+    val customerCpf: String?
 ) {
 
     fun nextStatus() {
@@ -33,6 +34,7 @@ class Order(
 
         fun from(orderPersisted: OrderPersisted): Order =
             Order(
+                id = orderPersisted.id,
                 products = orderPersisted.products.map { Product.from(it) },
                 creationDate = orderPersisted.creationDate,
                 status = orderPersisted.status,

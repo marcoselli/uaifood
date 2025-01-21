@@ -1,6 +1,5 @@
 package br.edu.uaifood.ports.inbound.api
 
-import Payment
 import br.edu.uaifood.adapters.CheckoutService
 import br.edu.uaifood.adapters.repositories.OrderRepository
 import br.edu.uaifood.adapters.repositories.PaymentRepository
@@ -38,7 +37,7 @@ class OrderControllerTest(
     @Autowired
     private val mockMvc: MockMvc,
     @Autowired
-private val jsonReader: JsonReader,
+    private val jsonReader: JsonReader
 ) {
     @MockkBean
     private lateinit var orderRepository: OrderRepository

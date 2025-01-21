@@ -59,6 +59,13 @@ class OrderController(
         }
     }
 
+    @Operation(summary = "Update order status", description = "Returns 200 if successful")
+    @ApiResponses(
+        value = [
+            ApiResponse(responseCode = "200", description = "Order status updated"),
+            ApiResponse(responseCode = "404", description = "Order not found", content = [Content(schema = Schema(implementation = ErrorMessageModel::class))]),
+        ]
+    )
     @PatchMapping("/{id}")
     fun updateOrderStatus(@PathVariable id: Long): ResponseEntity<Void> {
         return updateOrderStatusUseCase.execute(id)

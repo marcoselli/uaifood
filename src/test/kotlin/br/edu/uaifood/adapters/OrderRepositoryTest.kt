@@ -32,8 +32,8 @@ class OrderRepositoryTest {
         @Random secondRandomProduct: Product
     ) {
         //given
-        entityManager.persist(OrderPersisted.from(Order(listOf(firstRandomProduct), RECEIVED, parse("2023-06-20T19:34:50.63"), null)))
-        entityManager.persist(OrderPersisted.from(Order(listOf(firstRandomProduct, secondRandomProduct), READY, parse("2023-12-26T07:12:10.02"), "910.933.630-37")))
+        entityManager.persist(OrderPersisted.from(Order(1L, listOf(firstRandomProduct), RECEIVED, parse("2023-06-20T19:34:50.63"), null)))
+        entityManager.persist(OrderPersisted.from(Order(2L, listOf(firstRandomProduct, secondRandomProduct), READY, parse("2023-12-26T07:12:10.02"), "910.933.630-37")))
 
         //when
         val orders = orderRepository.findAll()

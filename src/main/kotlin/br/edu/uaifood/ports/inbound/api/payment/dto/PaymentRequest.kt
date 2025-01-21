@@ -1,7 +1,7 @@
 package br.edu.uaifood.ports.inbound.api.payment.dto
 
+import PaymentStatus
+
 data class PaymentRequest(
-    var paymentMethod: String,
-    var amount: Double,
-    var orderId: Long
+    val status: PaymentStatus
 )

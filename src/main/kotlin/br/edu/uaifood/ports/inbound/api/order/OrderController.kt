@@ -3,6 +3,7 @@ package br.edu.uaifood.ports.inbound.api.order
 import br.edu.uaifood.adapters.CheckoutService
 import br.edu.uaifood.adapters.usecases.CreateOrderUseCase
 import br.edu.uaifood.adapters.usecases.FindAllOrdersUseCase
+import br.edu.uaifood.adapters.usecases.UpdateOrderStatusUseCase
 import br.edu.uaifood.domain.entities.Order
 import br.edu.uaifood.exception.ErrorMessageModel
 import br.edu.uaifood.exception.OrderPaymentException
@@ -23,9 +24,10 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/v1/orders")
 class OrderController(
-    var createOrderUseCase: CreateOrderUseCase,
-    var findAllOrdersUseCase: FindAllOrdersUseCase,
-    var checkoutService: CheckoutService
+    private val createOrderUseCase: CreateOrderUseCase,
+    private val findAllOrdersUseCase: FindAllOrdersUseCase,
+    private val updateOrderStatusUseCase: UpdateOrderStatusUseCase,
+    private val checkoutService: CheckoutService
 ) {
 
     @Operation(summary = "Get a list of orders", description = "Returns 200 if successful")
@@ -58,7 +60,8 @@ class OrderController(
     }
 
     @PatchMapping("/{id}")
-    fun updateOrderStatus(@PathVariable id: String): ResponseEntity<Void> {
-        return status(OK).build()
+    fun updateOrderStatus(@PathVariable id: Long): ResponseEntity<Void> {
+        return updateOrderStatusUseCase.execute(id)
+            .let { status(OK).build() }
     }
 }

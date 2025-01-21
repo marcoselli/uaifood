@@ -18,7 +18,7 @@ class ProcessPaymentOrderFlowUseCaseImpl(
 ): ProcessPaymentOrderFlowUseCase {
 
     override fun execute(paymentId: String, paymentStatus: PaymentStatus) {
-        val paymentPersisted = paymentRepository.findByPaymentId(paymentId) ?: throw PaymentNotFoundException(123L)
+        val paymentPersisted = paymentRepository.findByPaymentId(paymentId) ?: throw PaymentNotFoundException(paymentId)
         paymentRepository.save(paymentPersisted.copy(status = paymentStatus))
         val payment = Payment.from(paymentPersisted)
         if (payment.isApproved())  approveOrder(payment.order!!)

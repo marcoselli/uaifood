@@ -3,6 +3,7 @@ package br.edu.uaifood.ports.inbound.api.order
 import br.edu.uaifood.adapters.CheckoutService
 import br.edu.uaifood.adapters.usecases.CreateOrderUseCase
 import br.edu.uaifood.adapters.usecases.FindAllOrdersUseCase
+import br.edu.uaifood.adapters.usecases.UpdateOrderStatusUseCase
 import br.edu.uaifood.adapters.usecases.FindOrderByIdUserCase
 import br.edu.uaifood.domain.entities.Order
 import br.edu.uaifood.exception.ErrorMessageModel
@@ -24,9 +25,10 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/v1/orders")
 class OrderController(
-    var createOrderUseCase: CreateOrderUseCase,
-    var findAllOrdersUseCase: FindAllOrdersUseCase,
-    var checkoutService: CheckoutService,
+    private val createOrderUseCase: CreateOrderUseCase,
+    private val findAllOrdersUseCase: FindAllOrdersUseCase,
+    private val updateOrderStatusUseCase: UpdateOrderStatusUseCase,
+    private val checkoutService: CheckoutService,
     var findOrderByIdUseCase: FindOrderByIdUserCase
 ) {
 
@@ -49,7 +51,7 @@ class OrderController(
         ]
     )
     @PostMapping
-    fun createOrder(@RequestBody orderRequest: OrderRequest, @RequestParam cpf: String?): ResponseEntity<Any> {
+    fun createOrder(@RequestBody orderRequest: OrderRequest, @RequestParam cpf: String?): ResponseEntity<OrderResponse> {
         val paymentConfirmed = checkoutService.fakeCheckout()
         if (paymentConfirmed) {
             return createOrderUseCase.execute(Order.from(orderRequest, cpf))
@@ -57,6 +59,12 @@ class OrderController(
         } else {
             throw OrderPaymentException("There was a problem with payment and the order was not received")
         }
+    }
+
+    @PatchMapping("/{id}")
+    fun updateOrderStatus(@PathVariable id: Long): ResponseEntity<Void> {
+        return updateOrderStatusUseCase.execute(id)
+            .let { status(OK).build() }
     }
 
     @Operation(summary = "Get the status of an order", description = "Returns 200 if successful")

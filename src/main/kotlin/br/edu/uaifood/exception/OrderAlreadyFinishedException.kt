@@ -3,5 +3,4 @@ package br.edu.uaifood.exception
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 
-class OrderNotFoundException(orderId: Long):
-    ResponseStatusException(HttpStatus.NOT_FOUND, "Order id $orderId is invalid")
+class OrderAlreadyFinishedException : ResponseStatusException(HttpStatus.BAD_REQUEST, "Order is already finished")

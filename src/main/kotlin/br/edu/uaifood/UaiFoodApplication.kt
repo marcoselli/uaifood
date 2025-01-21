@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.info.License
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.core.env.AbstractEnvironment
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 
 @SpringBootApplication
 @OpenAPIDefinition(
@@ -17,6 +18,7 @@ import org.springframework.core.env.AbstractEnvironment
 		description = "API documentation for UaiFood project"
 	)
 )
+
 class UaiFoodApplication
 
 fun main(args: Array<String>) {

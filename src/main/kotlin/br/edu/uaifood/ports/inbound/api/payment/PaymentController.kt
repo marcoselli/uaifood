@@ -1,7 +1,7 @@
 package br.edu.uaifood.ports.inbound.api.payment
 
 import PaymentStatus
-import br.edu.uaifood.adapters.usecases.FindOrderByIdUserCase
+import br.edu.uaifood.adapters.usecases.FindPaymentByIdUserCase
 import br.edu.uaifood.exception.ErrorMessageModel
 import br.edu.uaifood.ports.inbound.api.payment.dto.PaymentStatusResponse
 import io.swagger.v3.oas.annotations.Operation
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/v1/payments")
 class PaymentController(
-    private val findOrderByIdUseCase: FindOrderByIdUserCase
+    private val findPaymentByIdUseCase: FindPaymentByIdUserCase
 ) {
 
     @Operation(summary = "Get payment status", description = "Returns the current status of a payment")
@@ -30,7 +30,7 @@ class PaymentController(
     )
     @GetMapping("/{paymentId}/status")
     fun getPaymentStatus(@PathVariable paymentId: Long): ResponseEntity<PaymentStatusResponse> =
-        findOrderByIdUseCase.execute(paymentId)
+        findPaymentByIdUseCase.execute(paymentId)
             .let { ResponseEntity.ok(it) }
 
 }

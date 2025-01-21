@@ -1,19 +1,19 @@
 package br.edu.uaifood.usecases
 
 import br.edu.uaifood.adapters.repositories.PaymentRepository
-import br.edu.uaifood.adapters.usecases.FindOrderByIdUserCase
+import br.edu.uaifood.adapters.usecases.FindPaymentByIdUserCase
 import br.edu.uaifood.exception.PaymentNotFoundException
 import br.edu.uaifood.ports.inbound.api.payment.dto.PaymentStatusResponse
 import org.springframework.stereotype.Service
 
 @Service
-class FindOrderByIdUseCaseImpl(
+class FindPaymentByIdUseCaseImpl(
     private val paymentRepository: PaymentRepository
-) : FindOrderByIdUserCase {
+) : FindPaymentByIdUserCase {
 
-    override fun execute(orderId: Long): PaymentStatusResponse {
-        val paymentPersisted = paymentRepository.findById(orderId)
-            .orElseThrow { PaymentNotFoundException(orderId) }
+    override fun execute(paymentId: Long): PaymentStatusResponse {
+        val paymentPersisted = paymentRepository.findById(paymentId)
+            .orElseThrow { PaymentNotFoundException(paymentId) }
 
         return PaymentStatusResponse(
             productId = paymentPersisted.id ?: throw IllegalStateException("Payment ID cannot be null"),

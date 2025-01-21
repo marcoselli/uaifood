@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component
 class ProcessPaymentOrderFlowUseCaseImpl(
     private val paymentRepository: PaymentRepository,
     private val orderRepository: OrderRepository
-
 ): ProcessPaymentOrderFlowUseCase {
 
     override fun execute(paymentId: String, paymentStatus: PaymentStatus) {

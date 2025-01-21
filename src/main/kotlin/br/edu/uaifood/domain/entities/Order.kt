@@ -14,6 +14,7 @@ class Order(
 
     fun nextStatus() {
         when (status) {
+            OrderStatus.WAITING_PAYMENT -> this.status = OrderStatus.RECEIVED
             OrderStatus.RECEIVED -> this.status = OrderStatus.IN_PREPARATION
             OrderStatus.IN_PREPARATION -> this.status = OrderStatus.RECEIVED
             OrderStatus.READY -> this.status = OrderStatus.FINISHED
@@ -26,7 +27,7 @@ class Order(
             Order(
                 products = request.products.map { Product.from(it) },
                 creationDate = LocalDateTime.now(),
-                status = OrderStatus.RECEIVED,
+                status = OrderStatus.WAITING_PAYMENT,
                 customerCpf = cpf
             )
 
@@ -41,8 +42,9 @@ class Order(
 }
 
 enum class OrderStatus(val priority: Int) {
-    READY(0),
-    IN_PREPARATION(1),
-    RECEIVED(2),
-    FINISHED(3)
+    FINISHED(0),
+    READY(1),
+    IN_PREPARATION(2),
+    RECEIVED(3),
+    WAITING_PAYMENT(4)
 }

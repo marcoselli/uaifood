@@ -1,13 +1,17 @@
 package br.edu.uaifood.ports.inbound.api
 
+import Payment
 import br.edu.uaifood.adapters.CheckoutService
 import br.edu.uaifood.adapters.repositories.OrderRepository
-import br.edu.uaifood.adapters.repositories.ProductRepository
+import br.edu.uaifood.adapters.repositories.PaymentRepository
+import br.edu.uaifood.adapters.usecases.FindProductsByIdsUseCase
+import br.edu.uaifood.adapters.usecases.GenerateQrCodeUseCase
 import br.edu.uaifood.domain.entities.Order
 import br.edu.uaifood.domain.entities.OrderStatus.*
 import br.edu.uaifood.domain.services.OrderService
 import br.edu.uaifood.ports.inbound.api.order.dto.OrderRequest
 import br.edu.uaifood.ports.outbound.repository.order.OrderPersisted
+import br.edu.uaifood.ports.outbound.repository.payment.PaymentPersisted
 import br.edu.uaifood.ports.outbound.repository.product.ProductPersisted
 import br.edu.uaifood.util.JsonReader
 import com.ninjasquad.springmockk.MockkBean
@@ -45,6 +49,15 @@ private val jsonReader: JsonReader,
     @MockkBean
     private lateinit var checkoutService: CheckoutService
 
+    @MockkBean
+    private lateinit var findProductsByIdsUseCase: FindProductsByIdsUseCase
+
+    @MockkBean
+    private lateinit var generateQrCodeUseCase: GenerateQrCodeUseCase
+
+    @MockkBean
+    private lateinit var paymentRepository: PaymentRepository
+
     @Test
     fun `should find all orders`(@Random randomProduct: ProductPersisted) {
         // Given
@@ -68,7 +81,7 @@ private val jsonReader: JsonReader,
     }
 
     @Test
-    fun `should save a order successfully`() {
+    fun `should save a order successfully`(@Random paymentPersisted: PaymentPersisted) {
         // Given
         val orderRequest = jsonReader.import("order_request_ok.json")
         val orderPersisted = OrderPersisted.from(
@@ -78,8 +91,13 @@ private val jsonReader: JsonReader,
             )
         )
 
+        paymentPersisted.status = PaymentStatus.PENDING;
+
         // When
         every { orderRepository.save(any()) } returns orderPersisted
+        every { checkoutService.fakeCheckout() } returns true
+        every { paymentRepository.save(any()) } returns paymentPersisted
+        every { generateQrCodeUseCase.execute(any()) } returns ""
         every { checkoutService.fakeCheckout() } returns true
 
         mockMvc.perform(

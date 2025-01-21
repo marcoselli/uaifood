@@ -23,7 +23,9 @@ class UpdateMenuProductUseCaseImpl(
             productRepository.save(ProductPersisted.from(oldProduct.id, updatedProduct))
                 .let { ProductResponse.from(it) }
         }.onSuccess { logger.info("Product $productName updated from menu successfully")
-        }.onFailure { logger.info("Fail to update product $productName: ${it.message}")
+        }.onFailure {
+            logger.info("Fail to update product $productName: ${it.message}")
+            throw it
         }.getOrThrow()
     }
 }

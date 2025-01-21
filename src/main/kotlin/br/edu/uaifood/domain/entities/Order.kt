@@ -1,5 +1,6 @@
 package br.edu.uaifood.domain.entities
 
+import br.edu.uaifood.exception.OrderAlreadyFinishedException
 import br.edu.uaifood.ports.inbound.api.order.dto.OrderRequest
 import br.edu.uaifood.ports.outbound.repository.order.OrderPersisted
 import java.time.LocalDateTime
@@ -10,6 +11,16 @@ class Order(
     var creationDate: LocalDateTime,
     var customerCpf: String?
 ) {
+
+    fun nextStatus() {
+        when (status) {
+            OrderStatus.RECEIVED -> this.status = OrderStatus.IN_PREPARATION
+            OrderStatus.IN_PREPARATION -> this.status = OrderStatus.RECEIVED
+            OrderStatus.READY -> this.status = OrderStatus.FINISHED
+            OrderStatus.FINISHED -> throw OrderAlreadyFinishedException()
+        }
+    }
+
     companion object {
         fun from(request: OrderRequest, cpf: String?) =
             Order(

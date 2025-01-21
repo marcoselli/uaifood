@@ -20,7 +20,9 @@ class FindCustomerByCpfUseCaseImpl(
             val customer =
                 repository.findByCpf(cpf) ?: throw CustomerNotFoundException("Customer for cpf $cpf not found")
             CustomerResponse.from(customer)
-        }.onFailure { logger.info("Fail to find Customer: ${it.message}")
+        }.onFailure {
+            logger.info("Fail to find Customer: ${it.message}")
+            throw it
         }.getOrThrow()
     }
 }

@@ -26,9 +26,9 @@ data class OrderPersisted(
     var customerCPF: String?
 ) {
     companion object {
-        fun from(order: Order): OrderPersisted {
+        fun from(order: Order, orderId: Long? = null): OrderPersisted {
             return OrderPersisted(
-                id = null,
+                id = orderId,
                 status = order.status,
                 products = order.products.map { ProductPersisted.from(it) },
                 creationDate = order.creationDate,

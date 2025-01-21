@@ -13,7 +13,7 @@ class FindPaymentByIdUseCaseImpl(
 
     override fun execute(paymentId: Long): PaymentStatusResponse {
         val paymentPersisted = paymentRepository.findById(paymentId)
-            .orElseThrow { PaymentNotFoundException(paymentId) }
+            .orElseThrow { PaymentNotFoundException(paymentId.toString()) }
 
         return PaymentStatusResponse(
             productId = paymentPersisted.id ?: throw IllegalStateException("Payment ID cannot be null"),

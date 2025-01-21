@@ -15,7 +15,7 @@ class Order(
             Order(
                 products = request.products.map { Product.from(it) },
                 creationDate = LocalDateTime.now(),
-                status = OrderStatus.RECEIVED,
+                status = OrderStatus.WAITING_PAYMENT,
                 customerCpf = cpf
             )
 
@@ -30,8 +30,9 @@ class Order(
 }
 
 enum class OrderStatus(val priority: Int) {
-    READY(0),
-    IN_PREPARATION(1),
-    RECEIVED(2),
-    FINISHED(3)
+    FINISHED(0),
+    READY(1),
+    IN_PREPARATION(2),
+    RECEIVED(3),
+    WAITING_PAYMENT(4)
 }

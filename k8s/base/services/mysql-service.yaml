@@ -3,10 +3,12 @@ kind: Service
 metadata:
   name: mysql-svc
   labels:
-    app: mysql-svc
+    app: mysql
 spec:
   type: ClusterIP
   selector:
-    app: mysql-pod
+    app: mysql
   ports:
-    -port: 3306
+    - port: 3306
+      targetPort: 3306
+      protocol: TCP

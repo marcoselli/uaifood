@@ -1,6 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: db-config
-data:
-  MYSQL_CONN_URL: jdbc:mysql://mysql:3306/uaifood

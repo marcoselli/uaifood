@@ -1,5 +1,6 @@
 package br.edu.uaifood.adapters
 
+import br.edu.uaifood.adapters.repositories.CustomerRepository
 import br.edu.uaifood.domain.entities.Customer
 import br.edu.uaifood.domain.entities.CustomerStatus.ACTIVE
 import br.edu.uaifood.ports.outbound.repository.customer.CustomerPersisted

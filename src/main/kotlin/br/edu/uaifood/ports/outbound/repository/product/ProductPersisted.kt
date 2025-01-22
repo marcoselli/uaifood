@@ -3,14 +3,19 @@ package br.edu.uaifood.ports.outbound.repository.product
 import br.edu.uaifood.domain.entities.Product
 import br.edu.uaifood.ports.outbound.repository.order.OrderPersisted
 import jakarta.persistence.Entity
+import jakarta.persistence.GeneratedValue
 import jakarta.persistence.Id
 import jakarta.persistence.ManyToMany
+import org.hibernate.annotations.JdbcTypeCode
+import java.sql.Types
 import java.util.*
 
 @Entity(name = "product")
 data class ProductPersisted(
     @Id
-    val id: UUID = UUID.randomUUID(),
+    @GeneratedValue
+    @JdbcTypeCode(Types.VARCHAR)
+    val id: UUID = UUID.randomUUID(), //Its overriden by the database, but ensures current 'non-nullable' logic
     val name: String,
     val description: String,
     val price: Double,

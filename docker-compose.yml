@@ -21,7 +21,7 @@ services:
 
 # For local tests to debug purposes comment the service bellow
   uaifood-app:
-    image: 'uaifood:1.0.0'
+    image: 'uaifood:2.0.0'
     container_name: uaifood_app
     environment:
       - SCOPE=production
@@ -39,4 +39,3 @@ services:
 networks:
   uaifood_bridge_network:
     driver: bridge
-

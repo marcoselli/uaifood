@@ -1,36 +1,19 @@
-package br.edu.uaifood.domain.services
+package br.edu.uaifood.usecases
 
+import br.edu.uaifood.adapters.repositories.CustomerRepository
 import br.edu.uaifood.domain.entities.Customer
-import br.edu.uaifood.adapters.CustomerRepository
 import br.edu.uaifood.domain.entities.CustomerStatus.ACTIVE
 import br.edu.uaifood.ports.outbound.repository.customer.CustomerPersisted
 import io.mockk.every
 import io.mockk.mockk
 import org.assertj.core.api.AssertionsForClassTypes.assertThat
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import java.util.*
-import kotlin.test.Test
 
-class CustomerServiceImplTest {
+class FindCustomerByCpfUseCaseImplTest {
+
     private val customerRepository: CustomerRepository = mockk()
-    private val customerService = CustomerServiceImpl(customerRepository)
-
-    @Test
-    fun `should save a customer successfully`() {
-        //given
-        val customer = Customer("Name Surname", "910.933.630-37", "name.surname@gmail.com", ACTIVE)
-        val customerPersisted = CustomerPersisted.from(customer)
-        every { customerRepository.save(customerPersisted) } returns customerPersisted;
-
-        //when
-        val result = customerService.createCustomer(customer);
-
-        //then
-        assertThat(result.name).isEqualTo("Name Surname")
-        assertThat(result.cpf).isEqualTo("910.933.630-37")
-        assertThat(result.email).isEqualTo("name.surname@gmail.com")
-        assertThat(result.status).isEqualTo(ACTIVE)
-    }
+    private val findCustomerByCpfUseCaseImpl = FindCustomerByCpfUseCaseImpl(customerRepository)
 
     @Test
     fun `should find a customer by cpf successfully`() {
@@ -40,7 +23,7 @@ class CustomerServiceImplTest {
         every { customerRepository.findByCpf("910.933.630-37") } returns customerPersisted
 
         //when
-        val result = customerService.findCustomerByCpf("910.933.630-37");
+        val result = findCustomerByCpfUseCaseImpl.execute("910.933.630-37");
 
         //then
         assertThat(result.name).isEqualTo("Name Surname")
@@ -56,11 +39,10 @@ class CustomerServiceImplTest {
 
         //when
         val exception = assertThrows<Exception> {
-            customerService.findCustomerByCpf("910.933.630-37");
+            findCustomerByCpfUseCaseImpl.execute("910.933.630-37");
         }
 
         //then
         assertThat(exception.message).isEqualTo("404 NOT_FOUND \"Customer for cpf 910.933.630-37 not found\"")
     }
-
 }

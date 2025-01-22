@@ -1,7 +1,9 @@
 package br.edu.uaifood.ports.inbound.api.order
 
 import br.edu.uaifood.adapters.CheckoutService
-import br.edu.uaifood.adapters.OrderService
+import br.edu.uaifood.adapters.usecases.CreateOrderUseCase
+import br.edu.uaifood.adapters.usecases.FindAllOrdersUseCase
+import br.edu.uaifood.adapters.usecases.UpdateOrderStatusUseCase
 import br.edu.uaifood.domain.entities.Order
 import br.edu.uaifood.exception.ErrorMessageModel
 import br.edu.uaifood.exception.OrderPaymentException
@@ -22,8 +24,10 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/v1/orders")
 class OrderController(
-    var orderService: OrderService,
-    var checkoutService: CheckoutService
+    private val createOrderUseCase: CreateOrderUseCase,
+    private val findAllOrdersUseCase: FindAllOrdersUseCase,
+    private val updateOrderStatusUseCase: UpdateOrderStatusUseCase,
+    private val checkoutService: CheckoutService
 ) {
 
     @Operation(summary = "Get a list of orders", description = "Returns 200 if successful")
@@ -34,7 +38,7 @@ class OrderController(
     )
     @GetMapping
     fun findOrders() =
-        orderService.findAllOrders()
+        findAllOrdersUseCase.execute()
             .let { status(OK).body(it) }
 
     @Operation(summary = "Create a order", description = "Returns 201 if successful")
@@ -45,13 +49,26 @@ class OrderController(
         ]
     )
     @PostMapping
-    fun createOrder(@RequestBody orderRequest: OrderRequest, @RequestParam cpf: String?): ResponseEntity<Any> {
+    fun createOrder(@RequestBody orderRequest: OrderRequest, @RequestParam cpf: String?): ResponseEntity<OrderResponse> {
         val paymentConfirmed = checkoutService.fakeCheckout()
         if (paymentConfirmed) {
-            return orderService.createOrder(Order.from(orderRequest, cpf))
+            return createOrderUseCase.execute(Order.from(orderRequest, cpf))
                 .let { status(HttpStatus.CREATED).body(it) }
         } else {
             throw OrderPaymentException("There was a problem with payment and the order was not received")
         }
+    }
+
+    @Operation(summary = "Update order status", description = "Returns 200 if successful")
+    @ApiResponses(
+        value = [
+            ApiResponse(responseCode = "200", description = "Order status updated"),
+            ApiResponse(responseCode = "404", description = "Order not found", content = [Content(schema = Schema(implementation = ErrorMessageModel::class))]),
+        ]
+    )
+    @PatchMapping("/{id}")
+    fun updateOrderStatus(@PathVariable id: Long): ResponseEntity<Void> {
+        return updateOrderStatusUseCase.execute(id)
+            .let { status(OK).build() }
     }
 }

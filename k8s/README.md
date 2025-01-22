@@ -164,7 +164,7 @@ eval $(minikube docker-env)
 
 ## Carregar a imagem no Minikube
 ```bash
-minikube image load uaifood:1.0.0
+minikube image load uaifood:2.0.0
 ```
 
 ## Verificar se a imagem está disponível no Minikube
@@ -174,7 +174,7 @@ minikube ssh 'docker images | grep uaifood'
 
 ## Para remover a imagem antiga se necessário
 ```bash
-minikube ssh 'docker rmi uaifood:1.0.0'
+minikube ssh 'docker rmi uaifood:2.0.0'
 ```
 
 ### Monitoramento de Recursos

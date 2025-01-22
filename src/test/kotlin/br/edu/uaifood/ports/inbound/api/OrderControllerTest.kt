@@ -1,6 +1,5 @@
 package br.edu.uaifood.ports.inbound.api
 
-import Payment
 import br.edu.uaifood.adapters.CheckoutService
 import br.edu.uaifood.adapters.repositories.OrderRepository
 import br.edu.uaifood.adapters.repositories.PaymentRepository
@@ -38,7 +37,7 @@ class OrderControllerTest(
     @Autowired
     private val mockMvc: MockMvc,
     @Autowired
-private val jsonReader: JsonReader,
+    private val jsonReader: JsonReader
 ) {
     @MockkBean
     private lateinit var orderRepository: OrderRepository
@@ -77,11 +76,13 @@ private val jsonReader: JsonReader,
         .andExpect(jsonPath("$.[0].status").value("READY"))
         .andExpect(jsonPath("$.[0].products[0].name").value(randomProduct.name))
         .andExpect(jsonPath("$.[0].creation_date").value("2023-12-23T19:34:50.630"))
-
     }
 
     @Test
-    fun `should save a order successfully`(@Random paymentPersisted: PaymentPersisted) {
+    fun `should save a order successfully`(
+        @Random paymentPersisted: PaymentPersisted,
+        @Random productPersisted: ProductPersisted
+    ) {
         // Given
         val orderRequest = jsonReader.import("order_request_ok.json")
         val orderPersisted = OrderPersisted.from(
@@ -99,6 +100,8 @@ private val jsonReader: JsonReader,
         every { paymentRepository.save(any()) } returns paymentPersisted
         every { generateQrCodeUseCase.execute(any()) } returns ""
         every { checkoutService.fakeCheckout() } returns true
+        every { findProductsByIdsUseCase.execute(any()) } returns listOf(productPersisted.copy(category = "DESSERT"))
+
 
         mockMvc.perform(
             post("/v1/orders")
@@ -108,13 +111,14 @@ private val jsonReader: JsonReader,
             // Then
             .andExpect(status().isCreated)
             .andExpect(content().contentType(APPLICATION_JSON))
-            .andExpect(jsonPath("$.status").value("RECEIVED"))
-            .andExpect(jsonPath("$.products[0].name").value("Coke"))
-            .andExpect(jsonPath("$.products[1].name").value("Pizza"))
+            .andExpect(jsonPath("$.status").value("WAITING_PAYMENT"))
     }
 
     @Test
-    fun `should save a order with Cpf if customer choose to identify via Cpf`() {
+    fun `should save a order with Cpf if customer choose to identify via Cpf`(
+        @Random productPersisted: ProductPersisted,
+        @Random paymentPersisted: PaymentPersisted
+    ) {
         // Given
         val orderRequest = jsonReader.import("order_request_ok.json")
         val orderPersisted = OrderPersisted.from(
@@ -127,18 +131,19 @@ private val jsonReader: JsonReader,
         // When
         every { orderRepository.save(any()) } returns orderPersisted
         every { checkoutService.fakeCheckout() } returns true
+        every { generateQrCodeUseCase.execute(any()) } returns ""
+        every { findProductsByIdsUseCase.execute(any()) } returns listOf(productPersisted.copy(category = "DESSERT"))
+        every { paymentRepository.save(any()) } returns paymentPersisted
 
         mockMvc.perform(
             post("/v1/orders?cpf=910.933.630-37")
                 .content(orderRequest)
                 .contentType(APPLICATION_JSON)
         )
-            // Then
+        // Then
             .andExpect(status().isCreated)
             .andExpect(content().contentType(APPLICATION_JSON))
-            .andExpect(jsonPath("$.status").value("RECEIVED"))
-            .andExpect(jsonPath("$.products[0].name").value("Coke"))
-            .andExpect(jsonPath("$.products[1].name").value("Pizza"))
+            .andExpect(jsonPath("$.status").value("WAITING_PAYMENT"))
     }
 
 

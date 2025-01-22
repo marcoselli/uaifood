@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Configurações
-GITHUB_USERNAME="almeidadevops042@gmail.com"
+GITHUB_USERNAME="marcoselli"
 GITHUB_TOKEN="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"
 REPO_NAME="git@github.com:marcoselli/uaifood.git"
 

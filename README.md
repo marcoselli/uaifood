@@ -25,7 +25,7 @@ After that, run the commands at the root path of the project:
 1. Create a local image
 
 ```
-docker build --no-cache -t uaifood:1.0.0 .
+docker build --no-cache -t uaifood:2.0.0 .
 
 ```
 

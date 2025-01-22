@@ -14,7 +14,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 @OpenAPIDefinition(
 	info = Info(
 		title = "UaiFood API",
-		version = "1.0.0",
+		version = "2.0.0",
 		description = "API documentation for UaiFood project"
 	)
 )

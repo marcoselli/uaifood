@@ -24,33 +24,20 @@ class CreateOrderUseCaseImpl(
     private val logger = LoggerFactory.getLogger(this::class.java)
     override fun execute(order: Order): OrderResponse {
         logger.info("Creating order")
-
         val managedProducts = findProductsByIdsUseCase.execute(order.products)
         val orderPersisted = OrderPersisted.from(order).apply { products = managedProducts }
         val payment = Payment(
-        order = Order.from(orderPersisted),
-        status = PaymentStatus.PENDING,
-        paymentId = null,
-        method = "",
-        amount = 100.0,
-        qrCode = "");
-        orderPersisted.payment =
-            PaymentPersisted.from(payment)
-
+            order = Order.from(orderPersisted),
+            status = PaymentStatus.PENDING,
+            paymentId = order.id.toString(),
+            amount =  order.products.sumOf { product -> product.price } ,
+            qrCode = generateQrCodeUseCase.execute(orderPersisted)
+        )
         return runCatching {
-
-            orderRepository.save(orderPersisted).also {
-                paymentRepository.save(
-                    PaymentPersisted.from
-                        (Payment(
-                        order = Order.from(orderPersisted),
-                        status = PaymentStatus.PENDING,
-                        paymentId = "123456",
-                        method = "",
-                        amount = 100.0,
-                        qrCode = generateQrCodeUseCase.execute(orderPersisted))))
-            }.let { OrderResponse.from(it) }
-
+            orderPersisted.payment = PaymentPersisted.from(payment)
+            orderRepository.save(orderPersisted)
+            paymentRepository.save(PaymentPersisted.from(payment))
+            OrderResponse.from(orderPersisted)
         }.onSuccess { logger.info("Order created successfully")
         }.onFailure {
             logger.info("Fail to create order: ${it.message}")

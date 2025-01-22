@@ -10,7 +10,6 @@ import br.edu.uaifood.ports.outbound.repository.payment.PaymentPersisted
 data class PaymentResponse(
     var id: Long? = null,
     var paymentId: String?,
-    var paymentMethod: String?,
     var amount: Double,
     var status: PaymentStatus,
     var qrCode: String?,
@@ -24,9 +23,8 @@ data class PaymentResponse(
                 paymentId = paymentPersisted.paymentId,
                 amount = paymentPersisted.amount,
                 status = paymentPersisted.status,
-                paymentMethod = paymentPersisted.paymentMethod,
                 qrCode = paymentPersisted.qrCode,
-                orderId = paymentPersisted.order.id
+                orderId = paymentPersisted.order!!.id,
             )
 
         fun from(payment: Payment): PaymentResponse =
@@ -34,7 +32,6 @@ data class PaymentResponse(
                 paymentId = payment.paymentId,
                 amount = payment.amount,
                 status = payment.status,
-                paymentMethod = payment.method,
                 qrCode =  payment.qrCode
             )
     }

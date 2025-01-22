@@ -7,11 +7,13 @@ YELLOW='\033[1;33m'
 NC='\033[0m'
 
 # Configurações
-GIT_REPO_URL="git@github.com:techchallengerdev/api-spassu.git"
+GIT_REPO_URL="git@github.com:marcoselli/uaifood.git"
 SSH_KEY_PATH="$HOME/.ssh/id_ed25519_tech_challenge_spassu"
-EMAIL="techchallengerspassu@gmail.com"
-BRANCH="main"
-COMMIT_MESSAGE="update: add response, request e use case criar livro, atualizar livro e controller livro - part2"
+EMAIL="almeidadevops042@gmail.com"
+BRANCH="feature/arch-k8s"
+COMMIT_MESSAGE="feature/arch-ks - manifestos k8s"
+
+git@github.com:marcoselli/uaifood.git
 
 # Função para log
 log() {

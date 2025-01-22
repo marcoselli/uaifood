@@ -8,7 +8,6 @@ data class Payment(
     val order: Order?,
     val status: PaymentStatus,
     val paymentId: String?,
-    val method: String?,
     val amount: Double,
     val qrCode: String?
 ) {
@@ -17,10 +16,9 @@ data class Payment(
     companion object {
         fun from(paymentPersisted: PaymentPersisted): Payment =
             Payment(
-                order = Order.from(paymentPersisted.order),
+                order = if (paymentPersisted.order != null ) Order.from(paymentPersisted.order!!) else null,
                 status = paymentPersisted.status,
                 paymentId = paymentPersisted.paymentId,
-                method = paymentPersisted.paymentMethod,
                 amount = paymentPersisted.amount,
                 qrCode = paymentPersisted.qrCode
             )

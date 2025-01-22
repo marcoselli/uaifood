@@ -15,23 +15,21 @@ data class PaymentPersisted (
     val paymentId: String?, // ID gerado pelo sistema de pagamento (e.g., Mercado Pago)
     @Enumerated(EnumType.STRING)
     var status: PaymentStatus, // Status do pagamento (e.g., PENDING, APPROVED)
-    val paymentMethod: String?, // Método de pagamento (e.g., CREDIT_CARD, PIX)
     var qrCode: String?, // Método de pagamento (e.g., CREDIT_CARD, PIX)
     val amount: Double, // Valor do pagamento
     @OneToOne
     @JoinColumn(name = "order_id", nullable = false)
-    var order: OrderPersisted // Relacionamento com o pedido
+    var order: OrderPersisted? = null // Relacionamento com o pedido
 ){
     companion object {
         fun from(payment: Payment): PaymentPersisted {
             return PaymentPersisted(
                 id = null,
                 status = payment.status,
-                paymentMethod = payment.method,
                 qrCode = payment.qrCode,
                 amount = payment.amount,
                 paymentId = payment.paymentId,
-                order = TODO()
+                order = null
             )
         }
     }

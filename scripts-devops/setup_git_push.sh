@@ -8,7 +8,7 @@ NC='\033[0m'
 
 # Configurações
 GIT_REPO_URL="git@github.com:marcoselli/uaifood.git"
-SSH_KEY_PATH="$HOME/.ssh/id_ed25519_tech_challenge_spassu"
+SSH_KEY_PATH="$HOME/.ssh/id_ed25519_almeida_devops_042wq"
 EMAIL="almeidadevops042@gmail.com"
 BRANCH="eduardo/refactoring-docker-compose-start"
 COMMIT_MESSAGE="ajustes no dockerfile e docker-compose para rodar localmente integracao api e mysql"

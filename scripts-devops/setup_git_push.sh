@@ -10,8 +10,8 @@ NC='\033[0m'
 GIT_REPO_URL="git@github.com:marcoselli/uaifood.git"
 SSH_KEY_PATH="$HOME/.ssh/id_ed25519_tech_challenge_spassu"
 EMAIL="almeidadevops042@gmail.com"
-BRANCH="feature/arch-k8s"
-COMMIT_MESSAGE="feature/arch-ks - manifestos k8s"
+BRANCH="eduardo/refactoring-docker-compose-start"
+COMMIT_MESSAGE="ajustes no dockerfile e docker-compose para rodar localmente integracao api e mysql"
 
 git@github.com:marcoselli/uaifood.git
 

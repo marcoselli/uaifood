@@ -32,10 +32,35 @@ docker build --no-cache -t uaifood:2.0.0 .
 2. Start the project
 
 ```
-docker-compose up
+docker-compose up -d
 
 ```
 
+With this command, three components will be launched locally: the application container called 'uaifood-app', the MySQL database container 
+called 'uaifood-mysql', and a network named 'uaifood_uaifood-network'.
+
 ## ☕ Using uaifood
 
-After running the commands ahead you can access the endpoints at: http://localhost:8080/swagger-ui/index.html
+After running the commands ahead you can access the endpoints at: http://localhost:8081/swagger-ui/index.html
+
+# Using with curl
+
+## Create one customer
+
+```
+curl -X POST http://localhost:8081/v1/customers \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "João Silva",
+    "email": "joao.silva@example.com", 
+    "cpf": "12345678909"
+  }'
+  
+```
+
+## List single customer find by CPF
+
+```
+curl -X GET "http://localhost:8081/v1/customers?cpf=12345678909"
+
+```

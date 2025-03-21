@@ -5,7 +5,7 @@ metadata:
   labels:
     app: fastfood-api
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
       app: fastfood-api
@@ -16,8 +16,14 @@ spec:
     spec:
       containers:
         - name: fastfood-api
-          image: talkischeap42show/uaifood:1.0.0
+          image: devops3ng1nn3r/uaifood:1.0.0
           imagePullPolicy: IfNotPresent
+          startupProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            failureThreshold: 30
+            periodSeconds: 10
           ports:
             - containerPort: 8080
           resources:

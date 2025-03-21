@@ -39,3 +39,4 @@ out/
 ### Kotlin ###
 .kotlin
 /mysql-data/
+/scripts-devops/

@@ -64,3 +64,10 @@ curl -X POST http://localhost:8081/v1/customers \
 curl -X GET "http://localhost:8081/v1/customers?cpf=12345678909"
 
 ```
+
+## Generated build docker image locally in terminal
+
+```
+./scripts-devops/build-docker-image.sh
+
+```

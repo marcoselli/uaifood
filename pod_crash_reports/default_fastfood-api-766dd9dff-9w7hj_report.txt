@@ -1,0 +1,125 @@
+Relatório de Diagnóstico: default/fastfood-api-766dd9dff-9w7hj
+Data: sex 21 mar 2025 03:08:32 -03
+===================================
+Name:             fastfood-api-766dd9dff-9w7hj
+Namespace:        default
+Priority:         0
+Service Account:  default
+Node:             minikube/192.168.49.2
+Start Time:       Tue, 21 Jan 2025 21:32:53 -0300
+Labels:           app=fastfood-api
+                  pod-template-hash=766dd9dff
+Annotations:      <none>
+Status:           Running
+IP:               10.244.0.18
+IPs:
+  IP:           10.244.0.18
+Controlled By:  ReplicaSet/fastfood-api-766dd9dff
+Containers:
+  fastfood-api:
+    Container ID:   docker://69b23814f8cc076b8449e6157afbbf65660d402fffd29c0d85d5ba46614e91c1
+    Image:          talkischeap42show/uaifood:1.0.0
+    Image ID:       docker-pullable://talkischeap42show/uaifood@sha256:d5e8b088310b5f0c9767445d078415a1a5776d9ae1e65f9bc6d83017fc0c7d47
+    Port:           8080/TCP
+    Host Port:      0/TCP
+    State:          Waiting
+      Reason:       CrashLoopBackOff
+    Last State:     Terminated
+      Reason:       Error
+      Exit Code:    137
+      Started:      Fri, 21 Mar 2025 03:06:19 -0300
+      Finished:     Fri, 21 Mar 2025 03:07:45 -0300
+    Ready:          False
+    Restart Count:  801
+    Limits:
+      cpu:     300m
+      memory:  512Mi
+    Requests:
+      cpu:      100m
+      memory:   256Mi
+    Liveness:   http-get http://:8080/actuator/health/liveness delay=30s timeout=1s period=10s #success=1 #failure=3
+    Readiness:  http-get http://:8080/actuator/health/readiness delay=20s timeout=1s period=10s #success=1 #failure=3
+    Environment Variables from:
+      fastfood-config   ConfigMap  Optional: false
+      fastfood-secrets  Secret     Optional: false
+    Environment:        <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-m59qw (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 True 
+  Ready                       False 
+  ContainersReady             False 
+  PodScheduled                True 
+Volumes:
+  kube-api-access-m59qw:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    ConfigMapOptional:       <nil>
+    DownwardAPI:             true
+QoS Class:                   Burstable
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason     Age                    From     Message
+  ----     ------     ----                   ----     -------
+  Warning  BackOff    6m32s (x1710 over 9h)  kubelet  Back-off restarting failed container fastfood-api in pod fastfood-api-766dd9dff-9w7hj_default(4a5f782e-e407-46d0-b592-80b2bcb05923)
+  Warning  Unhealthy  87s (x1151 over 9h)    kubelet  Readiness probe failed: Get "http://10.244.0.18:8080/actuator/health/readiness": dial tcp 10.244.0.18:8080: connect: connection refused
+
+
+=== LOGS ATUAIS ===
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.3.4)
+
+2025-03-21T06:06:48.549Z  INFO 1 --- [UaiFood] [           main] br.edu.uaifood.UaiFoodApplicationKt      : Starting UaiFoodApplicationKt v0.0.1-SNAPSHOT using Java 21.0.5 with PID 1 (/app/app.jar started by appuser in /app)
+2025-03-21T06:06:48.722Z  INFO 1 --- [UaiFood] [           main] br.edu.uaifood.UaiFoodApplicationKt      : The following 1 profile is active: "local"
+2025-03-21T06:07:20.925Z  INFO 1 --- [UaiFood] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-03-21T06:07:22.937Z  INFO 1 --- [UaiFood] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 1813 ms. Found 3 JPA repository interfaces.
+2025-03-21T06:07:36.828Z  INFO 1 --- [UaiFood] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-03-21T06:07:40.124Z  INFO 1 --- [UaiFood] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 49275 ms
+
+
+=== LOGS ANTERIORES ===
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.3.4)
+
+2025-03-21T06:06:48.549Z  INFO 1 --- [UaiFood] [           main] br.edu.uaifood.UaiFoodApplicationKt      : Starting UaiFoodApplicationKt v0.0.1-SNAPSHOT using Java 21.0.5 with PID 1 (/app/app.jar started by appuser in /app)
+2025-03-21T06:06:48.722Z  INFO 1 --- [UaiFood] [           main] br.edu.uaifood.UaiFoodApplicationKt      : The following 1 profile is active: "local"
+2025-03-21T06:07:20.925Z  INFO 1 --- [UaiFood] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-03-21T06:07:22.937Z  INFO 1 --- [UaiFood] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 1813 ms. Found 3 JPA repository interfaces.
+2025-03-21T06:07:36.828Z  INFO 1 --- [UaiFood] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-03-21T06:07:40.124Z  INFO 1 --- [UaiFood] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 49275 ms
+
+
+=== CONTROLADOR: ReplicaSet/fastfood-api-766dd9dff ===
+
+=== PROBLEMA DETECTADO: Connection Refused ===
+NAME                   TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)        AGE
+fastfood-api-service   NodePort    10.97.2.70     <none>        80:30542/TCP   58d
+kubernetes             ClusterIP   10.96.0.1      <none>        443/TCP        58d
+mysql-svc              ClusterIP   10.99.50.158   <none>        3306/TCP       58d
+NAME                   ENDPOINTS           AGE
+fastfood-api-service                       22s
+kubernetes             192.168.49.2:8443   58d
+mysql-svc              10.244.0.14:3306    58d
+
+=== CORREÇÃO APLICADA: Endpoints dos serviços reiniciados ===
+
+=== AÇÃO EXECUTADA: Pod reiniciado ===

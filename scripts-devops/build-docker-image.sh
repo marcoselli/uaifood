@@ -6,7 +6,7 @@ trap 'handle_error $? $LINENO' ERR
 
 # Configuration variables
 IMAGE_NAME="uaifood"
-IMAGE_TAG="1.0.0"
+IMAGE_TAG="2.0.0"
 DOCKERFILE_PATH="./Dockerfile"
 GRADLE_VERSION="8.10.2-jdk21-alpine"
 JAVA_VERSION="21"

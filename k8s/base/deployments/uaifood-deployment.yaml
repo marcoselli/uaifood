@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: fastfood-api
-          image: talkischeap42show/uaifood:1.0.0
+          image: talkischeap42show/uaifood:2.0.0
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
